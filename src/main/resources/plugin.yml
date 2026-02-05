@@ -1,4 +1,9 @@
 name: AnimalQuest
 version: '1.0-SNAPSHOT'
-main: ca.pandaaa.animalQuest.AnimalQuest
+main: ca.pandaaa.animalquest.AnimalQuest
 api-version: '1.21'
+
+commands:
+  animalquest:
+    permission: animalquest.admin
+    aliases: [aq]
