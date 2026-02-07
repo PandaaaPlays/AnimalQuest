@@ -82,28 +82,14 @@ public final class AnimalQuest extends JavaPlugin {
     private void RegisterCommands() {
         Commands commandExecutor = new Commands();
         PluginCommand animalQuestCommand = getCommand("animalquest");
-        if (animalQuestCommand == null) {
-            return;
+        if (animalQuestCommand != null) {
+            animalQuestCommand.setExecutor(commandExecutor);
+            animalQuestCommand.setTabCompleter(commandExecutor);
         }
 
-        animalQuestCommand.setExecutor(commandExecutor);
-        animalQuestCommand.setTabCompleter(commandExecutor);
+        PluginCommand aptitudeCommand = getCommand("aptitudes");
+        if (aptitudeCommand != null) {
+            aptitudeCommand.setExecutor(new ca.pandaaa.animalquest.commands.AptitudeCommand());
+        }
     }
 }
-
-// TODO List:
-/*
- * - Jobs system
- * - 4 jobs : Lumberjack, Miner, Alchemist, Explorer
- * - Must be able to see it with the /jobs in a GUI that is pretty.
- * - Each job has 20 levels. Each levels must give access to new stuff to the
- * player (such as dropping rare drops when lumberjack high and mining wood)
- * - Players start at level 1.
- * - Vanish system
- * -
- * - Guild system
- * - Spells
- * - Aptitudes GUI
- * - Shop system
- * -
- */
