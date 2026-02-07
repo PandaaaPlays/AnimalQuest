@@ -1,7 +1,12 @@
 package ca.pandaaa.animalquest.player;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.jobs.Job;
+import ca.pandaaa.animalquest.jobs.JobProgress;
+import ca.pandaaa.animalquest.jobs.Jobs;
 import ca.pandaaa.animalquest.player.experience.Experience;
 import ca.pandaaa.animalquest.player.mana.Mana;
 
@@ -14,6 +19,7 @@ public class PlayerData implements ConfigurationSerializable {
     private final Experience experience;
     private final Mana mana;
     private final Aptitudes aptitudes;
+    private final Jobs jobs;
     private int balance;
 
     public PlayerData(UUID uuid) {
@@ -21,6 +27,7 @@ public class PlayerData implements ConfigurationSerializable {
         this.experience = new Experience();
         this.mana = new Mana();
         this.aptitudes = new Aptitudes();
+        this.jobs = new Jobs();
         this.balance = 0;
         setupListeners();
     }
@@ -40,6 +47,15 @@ public class PlayerData implements ConfigurationSerializable {
         int intl = (int) map.getOrDefault("aptitude_mana", 0);
         this.aptitudes = new Aptitudes(str, vit, intl);
 
+        Object jobsData = map.get("jobs");
+        Jobs jobsResult;
+        if (jobsData instanceof ConfigurationSection section) {
+            jobsResult = new Jobs(section.getValues(false));
+        } else {
+            jobsResult = new Jobs();
+        }
+        this.jobs = jobsResult;
+
         this.balance = (int) map.getOrDefault("balance", 0);
         setupListeners();
     }
@@ -50,6 +66,19 @@ public class PlayerData implements ConfigurationSerializable {
             ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager().updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
         });
         mana.setOnChange(() -> updateManaDisplay(org.bukkit.Bukkit.getPlayer(uuid)));
+
+        var rewardManager = AnimalQuest.getPlugin().getJobLevelRewardManager();
+        if (rewardManager != null) {
+            for (Job job : Job.values()) {
+                JobProgress progress = jobs.getJob(job);
+                progress.setOnLevelUp(() -> {
+                    org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(uuid);
+                    if (p != null && p.isOnline()) {
+                        rewardManager.onLevelUp(p, job, progress.getLevel());
+                    }
+                });
+            }
+        }
     }
 
     public Experience getExperience() {
@@ -62,6 +91,10 @@ public class PlayerData implements ConfigurationSerializable {
 
     public Aptitudes getAptitudes() {
         return aptitudes;
+    }
+
+    public Jobs getJobs() {
+        return jobs;
     }
 
     public int getBalance() {
@@ -115,6 +148,7 @@ public class PlayerData implements ConfigurationSerializable {
         map.put("aptitude_strength", aptitudes.getStrength());
         map.put("aptitude_health", aptitudes.getHealth());
         map.put("aptitude_mana", aptitudes.getMana());
+        map.put("jobs", jobs.serialize());
         map.put("balance", balance);
         return map;
     }

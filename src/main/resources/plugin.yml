@@ -7,3 +7,13 @@ commands:
   animalquest:
     permission: animalquest.admin
     aliases: [aq]
+  jobs:
+    permission: animalquest.jobs
+    description: Open the jobs GUI
+
+permissions:
+  animalquest.admin:
+    description: Full admin access to AnimalQuest commands
+  animalquest.jobs:
+    description: Use the /jobs command to view job progress
+    default: true
