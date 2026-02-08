@@ -33,8 +33,20 @@ public final class AnimalQuest extends JavaPlugin {
         RegisterCommands();
 
         // TODO Not here...
-        spellManager.registerSpell(new HealSpell());
-        spellManager.registerSpell(new SpeedSpell());
+        spellManager.registerSpell(new Charge());
+        spellManager.registerSpell(new CraftsmansAnvil());
+        spellManager.registerSpell(new Cyclone());
+        spellManager.registerSpell(new DragonsStrike());
+        spellManager.registerSpell(new Endurance());
+        spellManager.registerSpell(new Fireball());
+        spellManager.registerSpell(new FireShield());
+        spellManager.registerSpell(new FireSpirit());
+        spellManager.registerSpell(new FlowerShield());
+        spellManager.registerSpell(new HealingSpree());
+        spellManager.registerSpell(new Immortal());
+        spellManager.registerSpell(new LightningSpeed());
+        spellManager.registerSpell(new StoneShield());
+        spellManager.registerSpell(new Strength());
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData data = playerDataManager.loadPlayer(player.getUniqueId());
