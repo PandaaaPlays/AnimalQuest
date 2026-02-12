@@ -5,6 +5,7 @@ import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.player.PlayerDataManager;
 import ca.pandaaa.animalquest.player.experience.ExperienceManager;
 import ca.pandaaa.animalquest.spells.*;
+import ca.pandaaa.animalquest.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -18,6 +19,8 @@ public final class AnimalQuest extends JavaPlugin {
     private ExperienceManager experienceManager;
     private SpellManager spellManager;
     private ScoreboardManager scoreboardManager;
+    private ShopManager shopManager;
+    private MultiplierManager multiplierManager;
 
     @Override
     public void onEnable() {
@@ -28,6 +31,8 @@ public final class AnimalQuest extends JavaPlugin {
         playerDataManager = new PlayerDataManager(this);
         spellManager = new SpellManager(playerDataManager);
         scoreboardManager = new ScoreboardManager(playerDataManager);
+        shopManager = new ShopManager();
+        multiplierManager = new MultiplierManager();
 
         RegisterEvents();
         RegisterCommands();
@@ -82,6 +87,14 @@ public final class AnimalQuest extends JavaPlugin {
         return scoreboardManager;
     }
 
+    public ShopManager getShopManager() {
+        return shopManager;
+    }
+
+    public MultiplierManager getMultiplierManager() {
+        return multiplierManager;
+    }
+
     private void RegisterSerializers() {
         ConfigurationSerialization.registerClass(PlayerData.class);
     }
@@ -89,6 +102,7 @@ public final class AnimalQuest extends JavaPlugin {
     private void RegisterEvents() {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(playerDataManager, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SpellListener(spellManager), this);
+        Bukkit.getPluginManager().registerEvents(shopManager, this);
     }
 
     private void RegisterCommands() {

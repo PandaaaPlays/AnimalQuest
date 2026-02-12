@@ -34,6 +34,10 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static String getSentenceCase(String string) {
+        return string.toUpperCase().substring(0, 1) + string.toLowerCase().substring(1).replaceAll("_", " ");
+    }
+
     public static String getAnimalQuestName() {
         return applyFormat(
                 "&#16A4A4&lA&#23B6B6&ln&#2FC8C8&li&#3CDBDB&lm&#48EDED&la&#55FFFF&ll&#555555&lQ&#6a6a6a&lu&#7f7f7f&le&#949494&ls&#aaaaaa&lt");

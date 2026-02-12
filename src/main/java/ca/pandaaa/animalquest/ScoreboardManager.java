@@ -91,7 +91,7 @@ public class ScoreboardManager {
             return;
 
         updateBoard(board, playerData);
-        
+
         // Only update tablist when level actually changes
         if (levelChanged) {
             updatePlayerTablistDisplay(player);
@@ -136,10 +136,12 @@ public class ScoreboardManager {
             guildTeam.setPrefix(Utils.applyFormat(" &3&l⁎ &bGuild &f-"));
         }
 
-        // Bonus
+        // Multiplier
         Team bonusTeam = board.getTeam("bonus");
         if (bonusTeam != null) {
-            bonusTeam.setPrefix(Utils.applyFormat(" &3&l⁎ &bBonus &fx" + Formats.formatBonus(1)));
+            double multiplier = ca.pandaaa.animalquest.AnimalQuest.getPlugin().getMultiplierManager()
+                    .getGlobalMultiplier();
+            bonusTeam.setPrefix(Utils.applyFormat(" &3&l⁎ &bBonus &fx" + Formats.formatBonus(multiplier)));
         }
     }
 }

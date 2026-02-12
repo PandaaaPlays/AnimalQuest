@@ -28,7 +28,7 @@ public class AnimalQuestGUI implements Listener {
 
         int titleLength = 27;
         Matcher matcher = ChatColor.STRIP_COLOR_PATTERN.matcher(title);
-        while(matcher.find())
+        while (matcher.find())
             titleLength += 2;
 
         title = (title.length() > titleLength ? title.substring(0, titleLength) + "." : title);
@@ -47,7 +47,7 @@ public class AnimalQuestGUI implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if(!Objects.equals(event.getView().getTopInventory(), inventory)) {
+        if (!Objects.equals(event.getView().getTopInventory(), inventory)) {
             return;
         }
         for (int slot : event.getRawSlots()) {
@@ -59,17 +59,18 @@ public class AnimalQuestGUI implements Listener {
     }
 
     private static boolean DEBUG_MENU_ITEM = false;
+
     protected static ItemStack getMenuItem(ItemStack item, boolean hideItemFlags) {
         ItemStack menuItem = item.clone();
         ItemMeta itemMeta = menuItem.getItemMeta();
-        if(DEBUG_MENU_ITEM) {
+        if (DEBUG_MENU_ITEM) {
             List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
             lore.add(Utils.applyFormat("&c&lMENU_ITEM"));
             itemMeta.setLore(lore);
         }
         NamespacedKey key = new NamespacedKey(AnimalQuest.getPlugin(), "AnimalQuest.MenuItem");
         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
-        if(hideItemFlags) {
+        if (hideItemFlags) {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -86,7 +87,7 @@ public class AnimalQuestGUI implements Listener {
     protected static ItemStack getFillerItem() {
         ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta fillerItemMeta = filler.getItemMeta();
-        if(fillerItemMeta != null)
+        if (fillerItemMeta != null)
             fillerItemMeta.setDisplayName(" ");
         filler.setItemMeta(fillerItemMeta);
         return getMenuItem(filler, true);
