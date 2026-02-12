@@ -1,6 +1,8 @@
 package ca.pandaaa.animalquest;
 
 import ca.pandaaa.animalquest.commands.Commands;
+import ca.pandaaa.animalquest.commands.JobsCommand;
+import ca.pandaaa.animalquest.jobs.JobsManager;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.player.PlayerDataManager;
 import ca.pandaaa.animalquest.player.experience.ExperienceManager;
@@ -17,6 +19,8 @@ public final class AnimalQuest extends JavaPlugin {
     private static AnimalQuest plugin;
     private PlayerDataManager playerDataManager;
     private ExperienceManager experienceManager;
+    private JobsManager jobsManager;
+
     private SpellManager spellManager;
     private ScoreboardManager scoreboardManager;
     private ShopManager shopManager;
@@ -28,6 +32,8 @@ public final class AnimalQuest extends JavaPlugin {
         RegisterSerializers();
 
         experienceManager = new ExperienceManager(this);
+        jobsManager = new JobsManager(this);
+
         playerDataManager = new PlayerDataManager(this);
         spellManager = new SpellManager(playerDataManager);
         scoreboardManager = new ScoreboardManager(playerDataManager);
@@ -79,6 +85,10 @@ public final class AnimalQuest extends JavaPlugin {
         return experienceManager;
     }
 
+    public JobsManager getJobsManager() {
+        return jobsManager;
+    }
+
     public SpellManager getSpellManager() {
         return spellManager;
     }
@@ -107,12 +117,18 @@ public final class AnimalQuest extends JavaPlugin {
 
     private void RegisterCommands() {
         Commands commandExecutor = new Commands();
+      
         PluginCommand animalQuestCommand = getCommand("animalquest");
         if (animalQuestCommand != null) {
             animalQuestCommand.setExecutor(commandExecutor);
             animalQuestCommand.setTabCompleter(commandExecutor);
         }
 
+        PluginCommand jobsCommand = getCommand("jobs");
+        if (jobsCommand != null) {
+            jobsCommand.setExecutor(new JobsCommand());
+        }
+      
         PluginCommand aptitudeCommand = getCommand("aptitudes");
         if (aptitudeCommand != null) {
             aptitudeCommand.setExecutor(new ca.pandaaa.animalquest.commands.AptitudeCommand());

@@ -7,5 +7,6 @@ commands:
   animalquest:
     permission: animalquest.admin
     aliases: [aq]
+  jobs:
   aptitudes:
     aliases: [apt]
