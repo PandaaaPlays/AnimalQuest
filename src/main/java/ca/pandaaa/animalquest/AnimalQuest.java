@@ -7,6 +7,7 @@ import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.player.PlayerDataManager;
 import ca.pandaaa.animalquest.player.experience.ExperienceManager;
 import ca.pandaaa.animalquest.spells.*;
+import ca.pandaaa.animalquest.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -22,6 +23,8 @@ public final class AnimalQuest extends JavaPlugin {
 
     private SpellManager spellManager;
     private ScoreboardManager scoreboardManager;
+    private ShopManager shopManager;
+    private MultiplierManager multiplierManager;
 
     @Override
     public void onEnable() {
@@ -34,13 +37,27 @@ public final class AnimalQuest extends JavaPlugin {
         playerDataManager = new PlayerDataManager(this);
         spellManager = new SpellManager(playerDataManager);
         scoreboardManager = new ScoreboardManager(playerDataManager);
+        shopManager = new ShopManager();
+        multiplierManager = new MultiplierManager();
 
         RegisterEvents();
         RegisterCommands();
 
         // TODO Not here...
-        spellManager.registerSpell(new HealSpell());
-        spellManager.registerSpell(new SpeedSpell());
+        spellManager.registerSpell(new Charge());
+        spellManager.registerSpell(new CraftsmansAnvil());
+        spellManager.registerSpell(new Cyclone());
+        spellManager.registerSpell(new DragonsStrike());
+        spellManager.registerSpell(new Endurance());
+        spellManager.registerSpell(new Fireball());
+        spellManager.registerSpell(new FireShield());
+        spellManager.registerSpell(new FireSpirit());
+        spellManager.registerSpell(new FlowerShield());
+        spellManager.registerSpell(new HealingSpree());
+        spellManager.registerSpell(new Immortal());
+        spellManager.registerSpell(new LightningSpeed());
+        spellManager.registerSpell(new StoneShield());
+        spellManager.registerSpell(new Strength());
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData data = playerDataManager.loadPlayer(player.getUniqueId());
@@ -80,6 +97,14 @@ public final class AnimalQuest extends JavaPlugin {
         return scoreboardManager;
     }
 
+    public ShopManager getShopManager() {
+        return shopManager;
+    }
+
+    public MultiplierManager getMultiplierManager() {
+        return multiplierManager;
+    }
+
     private void RegisterSerializers() {
         ConfigurationSerialization.registerClass(PlayerData.class);
     }
@@ -87,10 +112,12 @@ public final class AnimalQuest extends JavaPlugin {
     private void RegisterEvents() {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(playerDataManager, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SpellListener(spellManager), this);
+        Bukkit.getPluginManager().registerEvents(shopManager, this);
     }
 
     private void RegisterCommands() {
         Commands commandExecutor = new Commands();
+      
         PluginCommand animalQuestCommand = getCommand("animalquest");
         if (animalQuestCommand != null) {
             animalQuestCommand.setExecutor(commandExecutor);
@@ -101,22 +128,10 @@ public final class AnimalQuest extends JavaPlugin {
         if (jobsCommand != null) {
             jobsCommand.setExecutor(new JobsCommand());
         }
+      
+        PluginCommand aptitudeCommand = getCommand("aptitudes");
+        if (aptitudeCommand != null) {
+            aptitudeCommand.setExecutor(new ca.pandaaa.animalquest.commands.AptitudeCommand());
+        }
     }
 }
-
-// TODO List:
-/*
- * - Jobs system
- * - 4 jobs : Lumberjack, Miner, Alchemist, Explorer
- * - Must be able to see it with the /jobs in a GUI that is pretty.
- * - Each job has 20 levels. Each levels must give access to new stuff to the
- * player (such as dropping rare drops when lumberjack high and mining wood)
- * - Players start at level 1.
- * - Vanish system
- * -
- * - Guild system
- * - Spells
- * - Aptitudes GUI
- * - Shop system
- * -
- */

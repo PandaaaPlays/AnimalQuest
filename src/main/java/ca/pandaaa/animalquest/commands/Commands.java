@@ -18,6 +18,8 @@ public class Commands implements CommandExecutor, TabCompleter {
         registerSubCommand(new ExperienceSubCommand());
         registerSubCommand(new ManaSubCommand());
         registerSubCommand(new SpellSubCommand());
+        registerSubCommand(new ShopSubCommand());
+        registerSubCommand(new BalanceSubCommand());
     }
 
     @Override
@@ -50,11 +52,13 @@ public class Commands implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias,
+            String[] args) {
         if (args.length == 1) {
             List<String> completions = new ArrayList<>();
             for (String subCommand : subCommands.keySet()) {
-                if (subCommand.startsWith(args[0].toLowerCase()) && sender.hasPermission(subCommands.get(subCommand).getPermission())) {
+                if (subCommand.startsWith(args[0].toLowerCase())
+                        && sender.hasPermission(subCommands.get(subCommand).getPermission())) {
                     completions.add(subCommand);
                 }
             }

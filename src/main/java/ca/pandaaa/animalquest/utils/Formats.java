@@ -8,7 +8,7 @@ public class Formats {
     private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("0.0");
     private static final DecimalFormat BONUS_FORMAT = new DecimalFormat("0.0");
 
-    public static String formatMoney(int amount) {
+    public static String formatMoney(double amount) {
         return MONEY_FORMAT.format(amount);
     }
 

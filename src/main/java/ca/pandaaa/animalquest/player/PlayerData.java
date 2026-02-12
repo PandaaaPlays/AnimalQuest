@@ -104,6 +104,7 @@ public class PlayerData implements ConfigurationSerializable {
 
     public void setBalance(int balance) {
         this.balance = balance;
+        updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
     }
 
     public boolean consumeMana(double amount) {

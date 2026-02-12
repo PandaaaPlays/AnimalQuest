@@ -1,15 +1,22 @@
 package ca.pandaaa.animalquest;
 
+import ca.pandaaa.animalquest.player.AnimalRank;
+import ca.pandaaa.animalquest.player.StaffRank;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.utils.Utils;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TabManager {
 
     public void updateTablistHeader(Player player) {
-        player.setPlayerListHeader(Utils.applyFormat("\n" + Utils.getAnimalQuestName() + "\n&bOnline: &f" + Bukkit.getOnlinePlayers().size() + "\n"));
-        player.setPlayerListFooter(Utils.applyFormat("\n&3&lDISCORD &fdiscord.io/AnimalQuest\n&b&lSTORE &fanimalquest.buycraft.net\n"));
+        player.setPlayerListHeader(Utils.applyFormat(
+                "\n" + Utils.getAnimalQuestName() + "\n&bOnline: &f" + Bukkit.getOnlinePlayers().size() + "\n"));
+        player.setPlayerListFooter(
+                Utils.applyFormat("\n&3&lDISCORD &fdiscord.io/AnimalQuest\n&b&lSTORE &fanimalquest.buycraft.net\n"));
     }
 
     public void updatePlayerTablistDisplay(Player player) {
@@ -17,20 +24,19 @@ public class TabManager {
         if (data == null)
             return;
 
-        String rank = getRankPrefix(player);
-        String level = Utils.applyFormat(" &8[" + data.getExperience().getLevelColor() + data.getExperience().getLevel() + "&8]");
-        player.setPlayerListName(rank + player.getName() + level);
+        String rankPrefix = getRankPrefix(player);
+        String level = Utils
+                .applyFormat(" &8[" + data.getExperience().getLevelColor() + data.getExperience().getLevel() + "&8]");
+        player.setPlayerListName(rankPrefix + player.getName() + level);
     }
 
     private String getRankPrefix(Player player) {
-        if (player.hasPermission("AnimalQuest.admin")) {
-            return Utils.applyFormat("&4&lAdmin &f");
-        } else if (player.hasPermission("AnimalQuest.mod")) {
-            return Utils.applyFormat("&c&lMod &f");
-        } else if (player.hasPermission("AnimalQuest.helper")) {
-            return Utils.applyFormat("&c&lHelper &f");
+        StaffRank staffRank = StaffRank.getPlayerRank(player);
+        if (staffRank != null) {
+            return Utils.applyFormat(staffRank.getDisplayName() + " &f");
         } else {
-            return Utils.applyFormat("&f");
+            AnimalRank animalRank = AnimalRank.getPlayerRank(player);
+            return animalRank != null ? Utils.applyFormat(animalRank.getDisplayName() + " &f") : "";
         }
     }
 }
