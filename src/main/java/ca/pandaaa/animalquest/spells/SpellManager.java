@@ -33,6 +33,7 @@ public class SpellManager {
         }
 
         if (data.consumeMana(spell.getManaCost())) {
+            spell.sendActivationMessage(player);
             spell.cast(player);
             setCooldown(player, spell);
         } else {
