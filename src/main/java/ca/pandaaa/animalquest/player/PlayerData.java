@@ -63,18 +63,19 @@ public class PlayerData implements ConfigurationSerializable {
     private void setupListeners() {
         experience.setOnChange(() -> {
             updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
-            ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager().updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
+            ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager()
+                    .updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
         });
         mana.setOnChange(() -> updateManaDisplay(org.bukkit.Bukkit.getPlayer(uuid)));
 
-        var rewardManager = AnimalQuest.getPlugin().getJobLevelRewardManager();
-        if (rewardManager != null) {
+        var jobsManager = AnimalQuest.getPlugin().getJobsManager();
+        if (jobsManager != null) {
             for (Job job : Job.values()) {
                 JobProgress progress = jobs.getJob(job);
                 progress.setOnLevelUp(() -> {
                     org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(uuid);
                     if (p != null && p.isOnline()) {
-                        rewardManager.onLevelUp(p, job, progress.getLevel());
+                        // jobsManager.onLevelUp(p, job, progress.getLevel());
                     }
                 });
             }

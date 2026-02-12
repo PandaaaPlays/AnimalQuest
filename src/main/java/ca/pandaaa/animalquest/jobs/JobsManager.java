@@ -1,18 +1,19 @@
-package ca.pandaaa.animalquest.jobs.manager;
+package ca.pandaaa.animalquest.jobs;
 
 import ca.pandaaa.animalquest.AnimalQuest;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobsLevelExperienceManager implements JobExperienceManager {
+public class JobsManager {
 
     private final AnimalQuest plugin;
     private final Map<Integer, Double> levelGoals = new HashMap<>();
 
-    public JobsLevelExperienceManager(AnimalQuest plugin) {
+    public JobsManager(AnimalQuest plugin) {
         this.plugin = plugin;
         loadConfig();
     }
@@ -37,7 +38,6 @@ public class JobsLevelExperienceManager implements JobExperienceManager {
         }
     }
 
-    @Override
     public double getGoalForLevel(int level) {
         return levelGoals.getOrDefault(level, -1D);
     }

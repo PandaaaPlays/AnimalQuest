@@ -1,8 +1,8 @@
 package ca.pandaaa.animalquest.commands;
 
 import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.guis.JobsGUI;
 import ca.pandaaa.animalquest.jobs.Jobs;
-import ca.pandaaa.animalquest.jobs.JobsGUI;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,13 +18,8 @@ public class JobsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission("animalquest.jobs")) {
-            player.sendMessage(Utils.applyFormat("&c&l[!] &cInsufficient permission."));
-            return true;
-        }
-
         Jobs jobs = AnimalQuest.getPlugin().getPlayerDataManager().loadPlayer(player.getUniqueId()).getJobs();
-        JobsGUI.open(player, jobs);
+        new JobsGUI().openInventory(player, jobs);
         return true;
     }
 }

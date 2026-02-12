@@ -1,7 +1,6 @@
 package ca.pandaaa.animalquest.jobs;
 
 import ca.pandaaa.animalquest.AnimalQuest;
-import ca.pandaaa.animalquest.jobs.manager.JobExperienceManager;
 
 public class JobProgress {
 
@@ -46,8 +45,9 @@ public class JobProgress {
     }
 
     public double getGoalExperience() {
-        JobExperienceManager manager = getJobExperienceManager();
-        if (manager == null) return -1;
+        JobsManager manager = getJobsManager();
+        if (manager == null)
+            return -1;
         return manager.getGoalForLevel(level);
     }
 
@@ -56,7 +56,8 @@ public class JobProgress {
     }
 
     public void addExperience(double amount) {
-        if (amount <= 0) return;
+        if (amount <= 0)
+            return;
         this.currentExperience += amount;
         checkLevelUp();
         callOnChange();
@@ -73,15 +74,17 @@ public class JobProgress {
         callOnChange();
     }
 
-    private JobExperienceManager getJobExperienceManager() {
-        if (AnimalQuest.getPlugin() == null) return null;
-        return AnimalQuest.getPlugin().getJobExperienceManager();
+    private JobsManager getJobsManager() {
+        if (AnimalQuest.getPlugin() == null)
+            return null;
+        return AnimalQuest.getPlugin().getJobsManager();
     }
 
     private void checkLevelUp() {
         while (level < MAX_LEVEL) {
             double goal = getGoalExperience();
-            if (goal == -1 || currentExperience < goal) break;
+            if (goal == -1 || currentExperience < goal)
+                break;
             currentExperience -= goal;
             level++;
             callOnLevelUp();
@@ -89,10 +92,12 @@ public class JobProgress {
     }
 
     private void callOnChange() {
-        if (onChange != null) onChange.run();
+        if (onChange != null)
+            onChange.run();
     }
 
     private void callOnLevelUp() {
-        if (onLevelUp != null) onLevelUp.run();
+        if (onLevelUp != null)
+            onLevelUp.run();
     }
 }

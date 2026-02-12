@@ -1,26 +1,34 @@
-package ca.pandaaa.animalquest.jobs;
+package ca.pandaaa.animalquest.guis;
 
+import ca.pandaaa.animalquest.jobs.JobProgress;
+import ca.pandaaa.animalquest.jobs.Jobs;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
-public class JobsGUI {
+public class JobsGUI extends AnimalQuestGUI implements EventListener {
 
-    public static final String TITLE = Utils.applyFormat("&8» &eJobs");
-
+    private static final String TITLE = Utils.applyFormat("&8» &eJobs");
     private static final int SLOT_LUMBERJACK = 10;
     private static final int SLOT_MINER = 12;
     private static final int SLOT_ALCHEMIST = 14;
     private static final int SLOT_EXPLORER = 16;
 
-    public static void open(Player player, Jobs jobs) {
+    public JobsGUI() {
+        super(27, TITLE);
+    }
+
+    public void openInventory(Player player, Jobs jobs) {
         Inventory inv = Bukkit.createInventory(null, 27, TITLE);
 
         inv.setItem(SLOT_LUMBERJACK, createJobItem(Material.OAK_LOG, "&6Lumberjack", jobs.getLumberjack()));
@@ -31,10 +39,11 @@ public class JobsGUI {
         player.openInventory(inv);
     }
 
-    private static ItemStack createJobItem(Material material, String displayName, JobProgress progress) {
+    private ItemStack createJobItem(Material material, String displayName, JobProgress progress) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) return item;
+        if (meta == null)
+            return item;
 
         meta.setDisplayName(Utils.applyFormat(displayName));
         meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ATTRIBUTES,
@@ -49,7 +58,7 @@ public class JobsGUI {
         return item;
     }
 
-    private static String createExpBar(double current, double goal, int barLength) {
+    private String createExpBar(double current, double goal, int barLength) {
         int currentInt = (int) current;
         if (goal <= 0) {
             return Utils.applyFormat(currentInt + " &a" + "|".repeat(barLength) + " &7MAX");
@@ -61,7 +70,15 @@ public class JobsGUI {
         return Utils.applyFormat(currentInt + " " + green + gray + " " + goalInt);
     }
 
-    public static boolean isJobsGUI(String title) {
+    public boolean isJobsGUI(String title) {
         return title != null && title.equals(TITLE);
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!isJobsGUI(event.getView().getTitle())) {
+            return;
+        }
+        event.setCancelled(true);
     }
 }

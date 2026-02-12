@@ -2,10 +2,7 @@ package ca.pandaaa.animalquest;
 
 import ca.pandaaa.animalquest.commands.Commands;
 import ca.pandaaa.animalquest.commands.JobsCommand;
-import ca.pandaaa.animalquest.jobs.JobsGUIListener;
-import ca.pandaaa.animalquest.jobs.manager.JobExperienceManager;
-import ca.pandaaa.animalquest.jobs.manager.JobLevelRewardManager;
-import ca.pandaaa.animalquest.jobs.manager.JobsLevelExperienceManager;
+import ca.pandaaa.animalquest.jobs.JobsManager;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.player.PlayerDataManager;
 import ca.pandaaa.animalquest.player.experience.ExperienceManager;
@@ -21,8 +18,8 @@ public final class AnimalQuest extends JavaPlugin {
     private static AnimalQuest plugin;
     private PlayerDataManager playerDataManager;
     private ExperienceManager experienceManager;
-    private JobExperienceManager jobExperienceManager;
-    private JobLevelRewardManager jobLevelRewardManager;
+    private JobsManager jobsManager;
+
     private SpellManager spellManager;
     private ScoreboardManager scoreboardManager;
 
@@ -32,8 +29,8 @@ public final class AnimalQuest extends JavaPlugin {
         RegisterSerializers();
 
         experienceManager = new ExperienceManager(this);
-        jobExperienceManager = new JobsLevelExperienceManager(this);
-        jobLevelRewardManager = new JobLevelRewardManager();
+        jobsManager = new JobsManager(this);
+
         playerDataManager = new PlayerDataManager(this);
         spellManager = new SpellManager(playerDataManager);
         scoreboardManager = new ScoreboardManager(playerDataManager);
@@ -71,12 +68,8 @@ public final class AnimalQuest extends JavaPlugin {
         return experienceManager;
     }
 
-    public JobExperienceManager getJobExperienceManager() {
-        return jobExperienceManager;
-    }
-
-    public JobLevelRewardManager getJobLevelRewardManager() {
-        return jobLevelRewardManager;
+    public JobsManager getJobsManager() {
+        return jobsManager;
     }
 
     public SpellManager getSpellManager() {
@@ -94,7 +87,6 @@ public final class AnimalQuest extends JavaPlugin {
     private void RegisterEvents() {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(playerDataManager, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SpellListener(spellManager), this);
-        Bukkit.getPluginManager().registerEvents(new JobsGUIListener(), this);
     }
 
     private void RegisterCommands() {
