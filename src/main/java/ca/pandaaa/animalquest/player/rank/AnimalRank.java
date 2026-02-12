@@ -1,4 +1,4 @@
-package ca.pandaaa.animalquest.player;
+package ca.pandaaa.animalquest.player.rank;
 
 import org.bukkit.entity.Player;
 
@@ -30,7 +30,7 @@ public enum AnimalRank {
     public String getPermission() {
         return permission;
     }
-Q
+
     public static AnimalRank getPlayerRank(Player player) {
         AnimalRank[] ranks = values();
         for (int i = ranks.length - 1; i >= 0; i--) {

@@ -1,11 +1,9 @@
 package ca.pandaaa.animalquest;
 
-import ca.pandaaa.animalquest.player.AnimalRank;
-import ca.pandaaa.animalquest.player.StaffRank;
+import ca.pandaaa.animalquest.player.rank.AnimalRank;
+import ca.pandaaa.animalquest.player.rank.StaffRank;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.utils.Utils;
-
-import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

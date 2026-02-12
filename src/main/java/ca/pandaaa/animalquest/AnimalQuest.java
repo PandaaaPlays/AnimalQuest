@@ -62,12 +62,25 @@ public final class AnimalQuest extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData data = playerDataManager.loadPlayer(player.getUniqueId());
             data.updateManaDisplay(player);
-            scoreboardManager.setupScoreboard(player);
+
+            // Delay setup slightly to ensure everything is initialized and avoid issues
+            // during reload
+            org.bukkit.Bukkit.getScheduler().runTaskLater(this, () -> {
+                if (player.isOnline()) {
+                    scoreboardManager.setupScoreboard(player);
+                    scoreboardManager.updatePlayerTablistDisplay(player);
+                    scoreboardManager.updateTablistHeader();
+                }
+            }, 1L);
         }
     }
 
     @Override
     public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        }
+
         if (playerDataManager != null) {
             playerDataManager.saveAll();
         }
@@ -117,7 +130,7 @@ public final class AnimalQuest extends JavaPlugin {
 
     private void RegisterCommands() {
         Commands commandExecutor = new Commands();
-      
+
         PluginCommand animalQuestCommand = getCommand("animalquest");
         if (animalQuestCommand != null) {
             animalQuestCommand.setExecutor(commandExecutor);
@@ -128,7 +141,7 @@ public final class AnimalQuest extends JavaPlugin {
         if (jobsCommand != null) {
             jobsCommand.setExecutor(new JobsCommand());
         }
-      
+
         PluginCommand aptitudeCommand = getCommand("aptitudes");
         if (aptitudeCommand != null) {
             aptitudeCommand.setExecutor(new ca.pandaaa.animalquest.commands.AptitudeCommand());

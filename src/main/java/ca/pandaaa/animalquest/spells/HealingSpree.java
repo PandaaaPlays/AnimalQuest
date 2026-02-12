@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import ca.pandaaa.animalquest.utils.Utils;
+
 public class HealingSpree extends Spell {
 
     public HealingSpree() {

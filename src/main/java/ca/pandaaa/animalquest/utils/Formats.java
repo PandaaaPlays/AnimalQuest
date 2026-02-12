@@ -6,7 +6,7 @@ public class Formats {
     private static final DecimalFormat MONEY_FORMAT = new DecimalFormat("#,###");
     private static final DecimalFormat EXPERIENCE_FORMAT = new DecimalFormat("#,###");
     private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("0.0");
-    private static final DecimalFormat BONUS_FORMAT = new DecimalFormat("0.0");
+    private static final DecimalFormat BONUS_FORMAT = new DecimalFormat("0.00");
 
     public static String formatMoney(double amount) {
         return MONEY_FORMAT.format(amount);

@@ -25,10 +25,14 @@ public class PlayerListener implements Listener {
         PlayerData data = playerDataManager.loadPlayer(player.getUniqueId());
 
         data.applyAptitudes(player);
-        scoreboardManager.setupScoreboard(player);
 
-        scoreboardManager.updatePlayerTablistDisplay(player);
-        scoreboardManager.updateTablistHeader();
+        org.bukkit.Bukkit.getScheduler().runTaskLater(ca.pandaaa.animalquest.AnimalQuest.getPlugin(), () -> {
+            if (player.isOnline()) {
+                scoreboardManager.setupScoreboard(player);
+                scoreboardManager.updatePlayerTablistDisplay(player);
+                scoreboardManager.updateTablistHeader();
+            }
+        }, 1L);
     }
 
     @EventHandler

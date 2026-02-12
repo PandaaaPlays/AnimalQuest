@@ -1,8 +1,9 @@
 package ca.pandaaa.animalquest;
 
-import ca.pandaaa.animalquest.player.AnimalRank;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import ca.pandaaa.animalquest.player.rank.AnimalRank;
 
 public class MultiplierManager {
     public MultiplierManager() {

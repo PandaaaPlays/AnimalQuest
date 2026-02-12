@@ -140,7 +140,7 @@ public class ScoreboardManager {
         Team bonusTeam = board.getTeam("bonus");
         if (bonusTeam != null) {
             double multiplier = ca.pandaaa.animalquest.AnimalQuest.getPlugin().getMultiplierManager()
-                    .getGlobalMultiplier();
+                    .getGlobalMultiplier(); // TODO Shows 1.1x for admin?
             bonusTeam.setPrefix(Utils.applyFormat(" &3&l⁎ &bBonus &fx" + Formats.formatBonus(multiplier)));
         }
     }
