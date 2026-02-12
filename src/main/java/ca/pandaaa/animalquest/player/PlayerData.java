@@ -47,7 +47,8 @@ public class PlayerData implements ConfigurationSerializable {
     private void setupListeners() {
         experience.setOnChange(() -> {
             updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
-            ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager().updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
+            ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager()
+                    .updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
         });
         mana.setOnChange(() -> updateManaDisplay(org.bukkit.Bukkit.getPlayer(uuid)));
     }
@@ -70,6 +71,7 @@ public class PlayerData implements ConfigurationSerializable {
 
     public void setBalance(int balance) {
         this.balance = balance;
+        updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
     }
 
     public boolean consumeMana(double amount) {
