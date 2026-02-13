@@ -1,7 +1,7 @@
 package ca.pandaaa.animalquest.spells;
 
 import ca.pandaaa.animalquest.player.PlayerData;
-import ca.pandaaa.animalquest.player.PlayerDataManager;
+import ca.pandaaa.animalquest.managers.PlayerDataManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -16,6 +16,20 @@ public class SpellManager {
 
     public SpellManager(PlayerDataManager playerDataManager) {
         this.playerDataManager = playerDataManager;
+        registerSpell(new Charge());
+        registerSpell(new CraftsmansAnvil());
+        registerSpell(new Cyclone());
+        registerSpell(new DragonsStrike());
+        registerSpell(new Endurance());
+        registerSpell(new Fireball());
+        registerSpell(new FireShield());
+        registerSpell(new FireSpirit());
+        registerSpell(new FlowerShield());
+        registerSpell(new HealingSpree());
+        registerSpell(new Immortal());
+        registerSpell(new LightningSpeed());
+        registerSpell(new StoneShield());
+        registerSpell(new Strength());
     }
 
     public void registerSpell(Spell spell) {

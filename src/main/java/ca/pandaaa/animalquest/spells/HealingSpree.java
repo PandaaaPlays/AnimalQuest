@@ -11,7 +11,8 @@ import ca.pandaaa.animalquest.utils.Utils;
 public class HealingSpree extends Spell {
 
     public HealingSpree() {
-        super("healing_spree", "Healing Spree", 35, 20, "Heals you & your allies!");
+        super("healing_spree", "Healing Spree", 35, 20, "Heals you & your allies!",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWU2M2JhMDllNzlkYWJmYzYwZWJjY2M2ZTU4ZTM5ZmI1MWFlZjIxMDZlMWNlYTBmZjNiMjYxZGU4OTdjYjZiMiJ9fX0=");
     }
 
     @Override
@@ -24,7 +25,7 @@ public class HealingSpree extends Spell {
                 ((Player) entity).sendMessage(Utils.applyFormat("&d" + player.getName() + " used &5&lHealing Spree"));
                 ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 220, 1));
                 entity.getLocation().getWorld().spawnParticle(Particle.HEART, entity.getLocation(), 25, 1.0D, 1.0D,
-                        1.0D);
+                    1.0D);
             }
         }
     }

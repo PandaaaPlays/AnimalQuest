@@ -22,7 +22,8 @@ public class DragonsStrike extends Spell implements Listener {
     private final Set<UUID> jumpingPlayers = new HashSet<>();
 
     public DragonsStrike() {
-        super("dragons_strike", "Dragon's Strike", 75, 20, "Creates an impact strong as the Dragon's strike.");
+        super("dragons_strike", "Dragon's Strike", 75, 20, "Creates an impact strong as the Dragon's strike.",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJlODcwODlmOTMyOWI1NGM5YTU5NjU2MjUzNTQxMDdjN2Y5NmIzMDU0ZjFkZWY4Y2VlYTJiOTBjZTZmOGQifX19");
         Bukkit.getPluginManager().registerEvents(this, AnimalQuest.getPlugin());
     }
 

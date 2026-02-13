@@ -1,13 +1,11 @@
 package ca.pandaaa.animalquest.spells;
 
-import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.utils.CustomHead;
 import ca.pandaaa.animalquest.utils.Utils;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +16,15 @@ public abstract class Spell {
     private final int manaCost;
     private final int cooldownSeconds;
     private final String description;
+    private final String texture;
 
-    public Spell(String id, String name, int manaCost, int cooldownSeconds, String description) {
+    public Spell(String id, String name, int manaCost, int cooldownSeconds, String description, String texture) {
         this.id = id;
         this.name = name;
         this.manaCost = manaCost;
         this.cooldownSeconds = cooldownSeconds;
         this.description = description;
+        this.texture = texture;
     }
 
     public String getId() {
@@ -83,7 +83,7 @@ public abstract class Spell {
     }
 
     public ItemStack getItem() {
-        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack item = CustomHead.createHead(texture);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(Utils.applyFormat("&5&l" + name));
@@ -100,8 +100,8 @@ public abstract class Spell {
 
             meta.setLore(lore);
 
-            NamespacedKey key = new NamespacedKey(AnimalQuest.getPlugin(), "spell");
-            meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, id);
+            NamespacedKey key = new NamespacedKey(ca.pandaaa.animalquest.AnimalQuest.getPlugin(), "spell");
+            meta.getPersistentDataContainer().set(key, org.bukkit.persistence.PersistentDataType.STRING, id);
 
             item.setItemMeta(meta);
         }

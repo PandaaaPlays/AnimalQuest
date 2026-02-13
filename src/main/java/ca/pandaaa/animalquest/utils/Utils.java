@@ -1,8 +1,11 @@
 package ca.pandaaa.animalquest.utils;
 
+import ca.pandaaa.animalquest.enums.AnimalRank;
+import ca.pandaaa.animalquest.enums.StaffRank;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -39,40 +42,16 @@ public class Utils {
     }
 
     public static String getAnimalQuestName() {
-        return applyFormat(
-                "&#16A4A4&lA&#23B6B6&ln&#2FC8C8&li&#3CDBDB&lm&#48EDED&la&#55FFFF&ll&#555555&lQ&#6a6a6a&lu&#7f7f7f&le&#949494&ls&#aaaaaa&lt");
+        return applyFormat("&#16A4A4&lA&#23B6B6&ln&#2FC8C8&li&#3CDBDB&lm&#48EDED&la&#55FFFF&ll&#555555&lQ&#6a6a6a&lu&#7f7f7f&le&#949494&ls&#aaaaaa&lt");
     }
 
-    public static ItemStack createHead(String url) {
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-
-        if (url != null && !url.isEmpty()) {
-            SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-            headMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-            try {
-                PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID(), "CustomHead");
-
-                PlayerTextures playerTextures = playerProfile.getTextures();
-                playerTextures.setSkin(new URL("https://textures.minecraft.net/texture/" + url));
-                playerProfile.setTextures(playerTextures);
-
-                headMeta.setOwnerProfile(playerProfile);
-                head.setItemMeta(headMeta);
-            } catch (MalformedURLException exception) {
-                exception.printStackTrace();
-            }
+    public static String getRankPrefix(Player player) {
+        StaffRank staffRank = StaffRank.getPlayerRank(player);
+        if (staffRank != null) {
+            return Utils.applyFormat(staffRank.getDisplayName() + " &f");
+        } else {
+            AnimalRank animalRank = AnimalRank.getPlayerRank(player);
+            return animalRank != null ? Utils.applyFormat(animalRank.getDisplayName() + " &f") : "";
         }
-
-        return head;
-    }
-
-    public static boolean isInteger(String string) {
-        try {
-            Integer.parseInt(string);
-        } catch (NumberFormatException exception) {
-            return false;
-        }
-        return true;
     }
 }

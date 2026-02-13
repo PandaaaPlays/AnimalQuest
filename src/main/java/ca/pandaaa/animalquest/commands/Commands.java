@@ -1,6 +1,7 @@
 package ca.pandaaa.animalquest.commands;
 
 import ca.pandaaa.animalquest.utils.Utils;
+import ca.pandaaa.animalquest.commands.subcommands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

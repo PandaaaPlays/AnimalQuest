@@ -124,14 +124,14 @@ public class AptitudesGUI extends AnimalQuestGUI {
         meta.setDisplayName(Utils.applyFormat("&3&lAptitudes"));
         List<String> lore = new ArrayList<>();
         lore.add(Utils.applyFormat(
-                "&f&l⁎ &bRemaining &3&laptitude &bpoints: &f" + remainingPoints));
+            "&f&l⁎ &bRemaining &3&laptitude &bpoints: &f" + remainingPoints));
         lore.add(" ");
         lore.add(Utils.applyFormat("&4&l[&c&lStrength&4&l] &f"
-                + playerData.getAptitudes().getStrength()));
+            + playerData.getAptitudes().getStrength()));
         lore.add(Utils.applyFormat(
-                "&2&l[&a&lHealth&2&l] &f" + playerData.getAptitudes().getHealth()));
+            "&2&l[&a&lHealth&2&l] &f" + playerData.getAptitudes().getHealth()));
         lore.add(Utils.applyFormat(
-                "&3&l[&b&lMana&3&l] &f" + playerData.getAptitudes().getMana()));
+            "&3&l[&b&lMana&3&l] &f" + playerData.getAptitudes().getMana()));
         meta.setLore(lore);
 
         item.setItemMeta(meta);
@@ -156,14 +156,14 @@ public class AptitudesGUI extends AnimalQuestGUI {
 
         List<String> lore = new ArrayList<>();
         lore.add(Utils.applyFormat("&f&l⁎ &b&lCurrent&b: &7(&3Rank &b"
-                + strengthPoints + "&7)"));
+            + strengthPoints + "&7)"));
         lore.add(Utils.applyFormat(
-                "&a&l" + String.format("%.1f", (2D + aptitudeStrength) * 50) + "% &7damages"));
+            "&a&l" + String.format("%.1f", (2D + aptitudeStrength) * 50) + "% &7damages"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&f&l⁎ &b&lNext&b: &7(&3Rank &b"
-                + (strengthPoints + 1) + "&7)"));
+            + (strengthPoints + 1) + "&7)"));
         lore.add(Utils.applyFormat(
-                "&6&l" + String.format("%.1f", (2D + nextAptitudeStrength) * 50) + "% &7damages"));
+            "&6&l" + String.format("%.1f", (2D + nextAptitudeStrength) * 50) + "% &7damages"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&7(( Left-Click to add one ))"));
         lore.add(Utils.applyFormat("&7(( Right-Click to remove one ))"));
@@ -192,14 +192,14 @@ public class AptitudesGUI extends AnimalQuestGUI {
 
         List<String> lore = new ArrayList<>();
         lore.add(Utils.applyFormat("&f&l⁎ &b&lCurrent&b: &7(&3Rank &b"
-                + healthPoints + "&7)"));
+            + healthPoints + "&7)"));
         lore.add(Utils.applyFormat(
-                "&a&l" + String.format("%.1f", (20D + levelHealth + aptitudeHealth) / 2) + " &7hearts"));
+            "&a&l" + String.format("%.1f", (20D + levelHealth + aptitudeHealth) / 2) + " &7hearts"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&f&l⁎ &b&lNext&b: &7(&3Rank &b"
-                + (healthPoints + 1) + "&7)"));
+            + (healthPoints + 1) + "&7)"));
         lore.add(Utils.applyFormat("&6&l"
-                + String.format("%.1f", (20D + levelHealth + nextAptitudeHealth) / 2) + " &7hearts"));
+            + String.format("%.1f", (20D + levelHealth + nextAptitudeHealth) / 2) + " &7hearts"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&7(( Left-Click to add one ))"));
         lore.add(Utils.applyFormat("&7(( Right-Click to remove one ))"));
@@ -227,11 +227,11 @@ public class AptitudesGUI extends AnimalQuestGUI {
 
         List<String> lore = new ArrayList<>();
         lore.add(Utils.applyFormat(
-                "&f&l⁎ &b&lCurrent&b: &7(&3Rank &b" + manaPoints + "&7)"));
+            "&f&l⁎ &b&lCurrent&b: &7(&3Rank &b" + manaPoints + "&7)"));
         lore.add(Utils.applyFormat("&a&l" + maxMana + " &7mana"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&f&l⁎ &b&lNext&b: &7(&3Rank &b"
-                + (manaPoints + 1) + "&7)"));
+            + (manaPoints + 1) + "&7)"));
         lore.add(Utils.applyFormat("&6&l" + nextMaxMana + " &7mana"));
         lore.add(" ");
         lore.add(Utils.applyFormat("&7(( Left-Click to add one ))"));

@@ -1,89 +1,76 @@
 package ca.pandaaa.animalquest;
 
-import ca.pandaaa.animalquest.commands.Commands;
-import ca.pandaaa.animalquest.commands.JobsCommand;
-import ca.pandaaa.animalquest.jobs.JobsManager;
+import ca.pandaaa.animalquest.commands.*;
+import ca.pandaaa.animalquest.managers.GuildManager;
+import ca.pandaaa.animalquest.managers.JobsManager;
+import ca.pandaaa.animalquest.listeners.PlayerListener;
+import ca.pandaaa.animalquest.managers.ScoreboardManager;
 import ca.pandaaa.animalquest.player.PlayerData;
-import ca.pandaaa.animalquest.player.PlayerDataManager;
-import ca.pandaaa.animalquest.player.experience.ExperienceManager;
+import ca.pandaaa.animalquest.managers.PlayerDataManager;
+import ca.pandaaa.animalquest.managers.ExperienceManager;
 import ca.pandaaa.animalquest.spells.*;
-import ca.pandaaa.animalquest.shop.ShopManager;
+import ca.pandaaa.animalquest.managers.ShopManager;
+import ca.pandaaa.animalquest.managers.StaffManager;
+import ca.pandaaa.animalquest.managers.VanishManager;
+import ca.pandaaa.animalquest.managers.AbilityManager;
+import ca.pandaaa.animalquest.listeners.ChatListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class AnimalQuest extends JavaPlugin {
 
     private static AnimalQuest plugin;
-    private PlayerDataManager playerDataManager;
     private ExperienceManager experienceManager;
+    private PlayerDataManager playerDataManager;
     private JobsManager jobsManager;
-
     private SpellManager spellManager;
     private ScoreboardManager scoreboardManager;
     private ShopManager shopManager;
-    private MultiplierManager multiplierManager;
+    private StaffManager staffManager;
+    private VanishManager vanishManager;
+    private GuildManager guildManager;
 
     @Override
     public void onEnable() {
         plugin = this;
         RegisterSerializers();
 
-        experienceManager = new ExperienceManager(this);
-        jobsManager = new JobsManager(this);
+        // Staff
+        staffManager = new StaffManager();
+        vanishManager = new VanishManager(this);
 
+        // Shops
+        shopManager = new ShopManager(this);
+
+        // Experience / Level
+        experienceManager = new ExperienceManager();
+        experienceManager.loadConfig(this);
+
+        // Player
         playerDataManager = new PlayerDataManager(this);
+        scoreboardManager = new ScoreboardManager(this, playerDataManager);
+        playerDataManager.initialize();
+
+        // Jobs
+        jobsManager = new JobsManager(this);
+        guildManager = new GuildManager(this);
+
+        // Spells
         spellManager = new SpellManager(playerDataManager);
-        scoreboardManager = new ScoreboardManager(playerDataManager);
-        shopManager = new ShopManager();
-        multiplierManager = new MultiplierManager();
+
+        // Ability
+        new AbilityManager(this);
 
         RegisterEvents();
         RegisterCommands();
 
-        // TODO Not here...
-        spellManager.registerSpell(new Charge());
-        spellManager.registerSpell(new CraftsmansAnvil());
-        spellManager.registerSpell(new Cyclone());
-        spellManager.registerSpell(new DragonsStrike());
-        spellManager.registerSpell(new Endurance());
-        spellManager.registerSpell(new Fireball());
-        spellManager.registerSpell(new FireShield());
-        spellManager.registerSpell(new FireSpirit());
-        spellManager.registerSpell(new FlowerShield());
-        spellManager.registerSpell(new HealingSpree());
-        spellManager.registerSpell(new Immortal());
-        spellManager.registerSpell(new LightningSpeed());
-        spellManager.registerSpell(new StoneShield());
-        spellManager.registerSpell(new Strength());
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerData data = playerDataManager.loadPlayer(player.getUniqueId());
-            data.updateManaDisplay(player);
-
-            // Delay setup slightly to ensure everything is initialized and avoid issues
-            // during reload
-            org.bukkit.Bukkit.getScheduler().runTaskLater(this, () -> {
-                if (player.isOnline()) {
-                    scoreboardManager.setupScoreboard(player);
-                    scoreboardManager.updatePlayerTablistDisplay(player);
-                    scoreboardManager.updateTablistHeader();
-                }
-            }, 1L);
-        }
     }
 
     @Override
     public void onDisable() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        }
-
-        if (playerDataManager != null) {
-            playerDataManager.saveAll();
-        }
+        playerDataManager.shutdown();
     }
 
     public static AnimalQuest getPlugin() {
@@ -114,18 +101,27 @@ public final class AnimalQuest extends JavaPlugin {
         return shopManager;
     }
 
-    public MultiplierManager getMultiplierManager() {
-        return multiplierManager;
+    public StaffManager getStaffManager() {
+        return staffManager;
+    }
+
+    public VanishManager getVanishManager() {
+        return vanishManager;
+    }
+
+    public GuildManager getGuildManager() {
+        return guildManager;
     }
 
     private void RegisterSerializers() {
         ConfigurationSerialization.registerClass(PlayerData.class);
+        ConfigurationSerialization.registerClass(Guild.class);
     }
 
     private void RegisterEvents() {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(playerDataManager, scoreboardManager), this);
+        Bukkit.getPluginManager().registerEvents(new ChatListener(playerDataManager, staffManager), this);
         Bukkit.getPluginManager().registerEvents(new SpellListener(spellManager), this);
-        Bukkit.getPluginManager().registerEvents(shopManager, this);
     }
 
     private void RegisterCommands() {
@@ -144,7 +140,41 @@ public final class AnimalQuest extends JavaPlugin {
 
         PluginCommand aptitudeCommand = getCommand("aptitudes");
         if (aptitudeCommand != null) {
-            aptitudeCommand.setExecutor(new ca.pandaaa.animalquest.commands.AptitudeCommand());
+            aptitudeCommand.setExecutor(new AptitudeCommand());
+        }
+
+        PluginCommand broadcastCommand = getCommand("broadcast");
+        if (broadcastCommand != null) {
+            broadcastCommand.setExecutor(new BroadcastCommand());
+        }
+
+        PluginCommand payCommand = getCommand("pay");
+        if (payCommand != null) {
+            PayCommand payExecutor = new PayCommand();
+            payCommand.setExecutor(payExecutor);
+            payCommand.setTabCompleter(payExecutor);
+        }
+
+        PluginCommand mountCommand = getCommand("mount");
+        if (mountCommand != null) {
+            mountCommand.setExecutor(new MountCommand());
+        }
+
+        PluginCommand guildCommand = getCommand("guild");
+        if (guildCommand != null) {
+            GuildCommand guildExecutor = new GuildCommand();
+            guildCommand.setExecutor(guildExecutor);
+            guildCommand.setTabCompleter(guildExecutor);
+        }
+
+        PluginCommand vanishCommand = getCommand("vanish");
+        if (vanishCommand != null) {
+            vanishCommand.setExecutor(new VanishCommand());
+        }
+
+        PluginCommand staffChatCommand = getCommand("staffchat");
+        if (staffChatCommand != null) {
+            staffChatCommand.setExecutor(new StaffChatCommand());
         }
     }
 }

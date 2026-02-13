@@ -12,7 +12,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class SpellListener implements Listener {
     private final SpellManager spellManager;
-    private final NamespacedKey spellKey = new NamespacedKey(AnimalQuest.getPlugin(), "spell");;
+    private final NamespacedKey spellKey = new NamespacedKey(AnimalQuest.getPlugin(), "spell");
+    ;
 
     public SpellListener(SpellManager spellManager) {
         this.spellManager = spellManager;

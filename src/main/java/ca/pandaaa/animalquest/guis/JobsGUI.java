@@ -1,7 +1,7 @@
 package ca.pandaaa.animalquest.guis;
 
-import ca.pandaaa.animalquest.jobs.JobProgress;
-import ca.pandaaa.animalquest.jobs.Jobs;
+import ca.pandaaa.animalquest.player.jobs.JobProgress;
+import ca.pandaaa.animalquest.player.jobs.Jobs;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -47,8 +48,8 @@ public class JobsGUI extends AnimalQuestGUI implements EventListener {
 
         meta.setDisplayName(Utils.applyFormat(displayName));
         meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ATTRIBUTES,
-                ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ARMOR_TRIM,
-                ItemFlag.HIDE_DYE);
+            ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ARMOR_TRIM,
+            ItemFlag.HIDE_DYE);
 
         List<String> lore = new ArrayList<>();
         lore.add(Utils.applyFormat("&7Lvl &f" + progress.getLevel() + "&7/&f" + progress.getMaxLevel()));

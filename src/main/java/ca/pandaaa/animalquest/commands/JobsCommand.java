@@ -2,7 +2,7 @@ package ca.pandaaa.animalquest.commands;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.guis.JobsGUI;
-import ca.pandaaa.animalquest.jobs.Jobs;
+import ca.pandaaa.animalquest.player.jobs.Jobs;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,7 +18,7 @@ public class JobsCommand implements CommandExecutor {
             return true;
         }
 
-        Jobs jobs = AnimalQuest.getPlugin().getPlayerDataManager().loadPlayer(player.getUniqueId()).getJobs();
+        Jobs jobs = AnimalQuest.getPlugin().getPlayerDataManager().get(player.getUniqueId()).getJobs();
         new JobsGUI().openInventory(player, jobs);
         return true;
     }

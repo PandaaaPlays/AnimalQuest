@@ -1,6 +1,6 @@
 package ca.pandaaa.animalquest.shop;
 
-import ca.pandaaa.animalquest.items.AnimalQuestItem;
+import ca.pandaaa.animalquest.enums.AnimalQuestItem;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -15,12 +15,12 @@ public class ShopItem {
     private final boolean broadcast;
 
     public ShopItem(AnimalQuestItem item, int amount, double priceMoney, List<ItemStack> priceItems,
-            boolean broadcast) {
+                    boolean broadcast) {
         this(item, amount, priceMoney, priceItems, 1, broadcast);
     }
 
     public ShopItem(AnimalQuestItem item, int amount, double priceMoney, List<ItemStack> priceItems, int minimumLevel,
-            boolean broadcast) {
+                    boolean broadcast) {
         this.item = item;
         this.amount = amount;
         this.priceMoney = priceMoney;

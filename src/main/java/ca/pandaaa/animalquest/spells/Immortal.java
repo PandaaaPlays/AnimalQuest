@@ -8,7 +8,8 @@ import org.bukkit.potion.PotionEffectType;
 public class Immortal extends Spell {
 
     public Immortal() {
-        super("immortal", "Immortal", 200, 60, "Increases your health temporarily!");
+        super("immortal", "Immortal", 200, 60, "Increases your health temporarily!",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWFlNWQ2NTZjNjM1Mjc4MjJjMjE3ZjQyNjdkYTBiNzUyNmU2NTQyNTRiNDFlNDA3N2VhNjc3YmM3Nzg2M2M1YiJ9fX0=");
     }
 
     @Override

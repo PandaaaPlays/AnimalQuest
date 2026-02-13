@@ -8,7 +8,8 @@ import org.bukkit.potion.PotionEffectType;
 public class Endurance extends Spell {
 
     public Endurance() {
-        super("endurance", "Endurance", 50, 10, "Stops your hunger and makes you a little faster.");
+        super("endurance", "Endurance", 50, 10, "Stops your hunger and makes you a little faster.",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU4NjcwNTUxZjdmZjEzYWZhYjIzOTMxOGExMGJhZDIzMjdlZTc0MmUxNTc4MzdlYTE3ODVlZjQ0M2QzYTU3NiJ9fX0=");
     }
 
     @Override

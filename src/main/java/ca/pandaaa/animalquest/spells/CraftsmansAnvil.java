@@ -6,7 +6,8 @@ import org.bukkit.entity.Player;
 public class CraftsmansAnvil extends Spell {
 
     public CraftsmansAnvil() {
-        super("craftsmans_anvil", "Craftsman's Anvil", 70, 15, "Repairs your armor.");
+        super("craftsmans_anvil", "Craftsman's Anvil", 70, 15, "Repairs your armor.",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTNlMzJhNmM0MTQ3ZGY0MGQwMjM4NTQ2ZDM2ZDVjMWVlYWZjMmVhOWNlYWMwMzUzZmNiODNiMGVlYTJkMmNmMSJ9fX0=");
     }
 
     @Override
@@ -28,6 +29,6 @@ public class CraftsmansAnvil extends Spell {
         }
 
         player.getLocation().getWorld().spawnParticle(Particle.ENCHANT, player.getLocation(), 40, 1.0D, 1.0D,
-                1.0D);
+            1.0D);
     }
 }

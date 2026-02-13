@@ -6,7 +6,10 @@ api-version: '1.21'
 commands:
   animalquest:
     permission: animalquest.admin
-    aliases: [aq]
+    aliases: [ aq ]
   jobs:
+  mount:
+    aliases: [ mt ]
+  menu:
   aptitudes:
-    aliases: [apt]
+    aliases: [ apt ]

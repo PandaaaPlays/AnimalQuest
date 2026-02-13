@@ -11,14 +11,15 @@ import ca.pandaaa.animalquest.utils.Utils;
 public class FlowerShield extends Spell {
 
     public FlowerShield() {
-        super("flower_shield", "Flower Shield", 35, 10, "Gives you absobrtion hearts to protect you.");
+        super("flower_shield", "Flower Shield", 35, 10, "Gives you absobrtion hearts to protect you.",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjlkNzcyZTNiZWFhNWI5MWYzMjliMmRjYzJkMjQ2YjJjOGFmNWMzYzY3NTI2MTgwNzE0NmQ1OTU3NjdkZiJ9fX0=");
     }
 
     @Override
     public void cast(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 6020, 2));
         player.getLocation().getWorld().spawnParticle(Particle.FALLING_WATER, player.getLocation(), 25, 1.0D, 1.0D,
-                1.0D);
+            1.0D);
         player.getLocation().getWorld().spawnParticle(Particle.END_ROD, player.getLocation(), 25, 1.0D, 1.0D, 1.0D);
 
         for (Entity entity : player.getNearbyEntities(6.0D, 6.0D, 6.0D)) {
@@ -26,10 +27,10 @@ public class FlowerShield extends Spell {
                 ((Player) entity).sendMessage(Utils.applyFormat("&d" + player.getName() + " used &5&lFlower Shield"));
                 ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 6020, 1));
                 entity.getLocation().getWorld().spawnParticle(Particle.FALLING_WATER, entity.getLocation(), 25, 1.0D,
-                        1.0D,
-                        1.0D);
+                    1.0D,
+                    1.0D);
                 entity.getLocation().getWorld().spawnParticle(Particle.END_ROD, entity.getLocation(), 25, 1.0D, 1.0D,
-                        1.0D);
+                    1.0D);
             }
         }
     }

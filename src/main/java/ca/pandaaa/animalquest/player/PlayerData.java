@@ -1,17 +1,18 @@
 package ca.pandaaa.animalquest.player;
 
+import ca.pandaaa.animalquest.enums.Job;
+import ca.pandaaa.animalquest.player.jobs.JobProgress;
+import ca.pandaaa.animalquest.player.jobs.Jobs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import ca.pandaaa.animalquest.AnimalQuest;
-import ca.pandaaa.animalquest.jobs.Job;
-import ca.pandaaa.animalquest.jobs.JobProgress;
-import ca.pandaaa.animalquest.jobs.Jobs;
-import ca.pandaaa.animalquest.player.experience.Experience;
-import ca.pandaaa.animalquest.player.mana.Mana;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.Location;
+
 import java.util.UUID;
 
 public class PlayerData implements ConfigurationSerializable {
@@ -20,6 +21,7 @@ public class PlayerData implements ConfigurationSerializable {
     private final Mana mana;
     private final Aptitudes aptitudes;
     private final Jobs jobs;
+    private final Map<String, Location> homes;
     private int balance;
 
     public PlayerData(UUID uuid) {
@@ -28,6 +30,7 @@ public class PlayerData implements ConfigurationSerializable {
         this.mana = new Mana();
         this.aptitudes = new Aptitudes();
         this.jobs = new Jobs();
+        this.homes = new HashMap<>();
         this.balance = 0;
         setupListeners();
     }
@@ -57,14 +60,21 @@ public class PlayerData implements ConfigurationSerializable {
         this.jobs = jobsResult;
 
         this.balance = (int) map.getOrDefault("balance", 0);
+        this.homes = new HashMap<>();
+        if (map.containsKey("homes")) {
+            ConfigurationSection homeSection = (ConfigurationSection) map.get("homes");
+            for (String homeName : homeSection.getKeys(false)) {
+                homes.put(homeName, (Location) homeSection.get(homeName));
+            }
+        }
         setupListeners();
     }
 
     private void setupListeners() {
         experience.setOnChange(() -> {
-            updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
+            updateScoreboard(org.bukkit.Bukkit.getPlayer(uuid));
             ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager()
-                    .updatePlayerTablistDisplay(org.bukkit.Bukkit.getPlayer(uuid));
+                    .updateTablist(org.bukkit.Bukkit.getPlayer(uuid));
         });
         mana.setOnChange(() -> updateManaDisplay(org.bukkit.Bukkit.getPlayer(uuid)));
 
@@ -80,6 +90,10 @@ public class PlayerData implements ConfigurationSerializable {
                 });
             }
         }
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Experience getExperience() {
@@ -104,7 +118,19 @@ public class PlayerData implements ConfigurationSerializable {
 
     public void setBalance(int balance) {
         this.balance = balance;
-        updateScoreboardDisplay(org.bukkit.Bukkit.getPlayer(uuid));
+        updateScoreboard(org.bukkit.Bukkit.getPlayer(uuid));
+    }
+
+    public Map<String, Location> getHomes() {
+        return homes;
+    }
+
+    public void setHome(String name, Location loc) {
+        homes.put(name.toLowerCase(), loc);
+    }
+
+    public void removeHome(String name) {
+        homes.remove(name.toLowerCase());
     }
 
     public boolean consumeMana(double amount) {
@@ -134,10 +160,10 @@ public class PlayerData implements ConfigurationSerializable {
         player.setLevel((int) mana.getCurrentMana());
     }
 
-    public void updateScoreboardDisplay(org.bukkit.entity.Player player) {
+    public void updateScoreboard(org.bukkit.entity.Player player) {
         if (player == null || !player.isOnline())
             return;
-        ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager().updateScoreboard(player);
+        ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager().updateScoreboard(player, false);
     }
 
     @Override
@@ -152,6 +178,7 @@ public class PlayerData implements ConfigurationSerializable {
         map.put("aptitude_mana", aptitudes.getMana());
         map.put("jobs", jobs.serialize());
         map.put("balance", balance);
+        map.put("homes", homes);
         return map;
     }
 }
