@@ -1,4 +1,4 @@
-package ca.pandaaa.animalquest.jobs;
+package ca.pandaaa.animalquest.player.jobs;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.enums.Job;
@@ -45,10 +45,10 @@ public class JobProgress {
     }
 
     public double getGoalExperience() {
-        JobsManager manager = AnimalQuest.getPlugin().getJobsManager();
-        if (manager == null)
+        JobsManager jobsManager = AnimalQuest.getPlugin().getJobsManager();
+        if (jobsManager == null)
             return -1;
-        return manager.getGoalForLevel(level);
+        return jobsManager.getGoalForLevel(level);
     }
 
     public int getMaxLevel() {
