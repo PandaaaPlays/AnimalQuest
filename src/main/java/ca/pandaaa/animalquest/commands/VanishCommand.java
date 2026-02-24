@@ -26,10 +26,15 @@ public class VanishCommand implements CommandExecutor {
         boolean isVanished = vanishManager.isVanished(player);
         vanishManager.setVanished(player, !isVanished);
 
+        AnimalQuest.getPlugin().getScoreboardManager().updateTablist(player);
+        for (Player onlinePlayer : org.bukkit.Bukkit.getOnlinePlayers()) {
+            AnimalQuest.getPlugin().getScoreboardManager().updateTablistHeader(onlinePlayer);
+        }
+
         if (!isVanished) {
-            player.sendMessage(Utils.applyFormat("&8[&b&lAQ&8] &7Vanish &aon."));
+            player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bVanish &aenabled&b."));
         } else {
-            player.sendMessage(Utils.applyFormat("&8[&b&lAQ&8] &7Vanish &coff."));
+            player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bVanish &cdisabled&b."));
         }
         return true;
     }

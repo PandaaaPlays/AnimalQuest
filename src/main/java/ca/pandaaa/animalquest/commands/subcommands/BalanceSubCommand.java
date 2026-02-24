@@ -65,18 +65,18 @@ public class BalanceSubCommand implements SubCommand {
         switch (action) {
             case "add":
                 data.setBalance(data.getBalance() + amount);
-                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &8&l>> &bAdded &3$" + amount
-                    + " &bto &3" + target.getName() + "&b's balance."));
+                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bAdded &3$" + amount
+                        + " &bto &3" + target.getName() + "&b's balance."));
                 break;
             case "set":
                 data.setBalance(amount);
-                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &8&l>> &bSet &3" + target.getName()
-                    + "&b's balance to &3$" + amount + "&b."));
+                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bSet &3" + target.getName()
+                        + "&b's balance to &3$" + amount + "&b."));
                 break;
             case "remove":
                 data.setBalance(Math.max(0, data.getBalance() - amount));
-                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &8&l>> &bRemoved &3$" + amount
-                    + " &bfrom &3" + target.getName() + "&b's balance."));
+                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bRemoved &3$" + amount
+                        + " &bfrom &3" + target.getName() + "&b's balance."));
                 break;
             default:
                 sender.sendMessage(Utils.applyFormat("&c&l[!] &cInvalid action. Use add, set or remove."));

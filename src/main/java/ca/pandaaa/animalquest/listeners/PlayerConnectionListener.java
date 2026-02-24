@@ -1,20 +1,21 @@
 package ca.pandaaa.animalquest.listeners;
 
+import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.managers.PlayerDataManager;
 import ca.pandaaa.animalquest.managers.ScoreboardManager;
 import ca.pandaaa.animalquest.player.PlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerListener implements Listener {
+public class PlayerConnectionListener implements Listener {
     private final PlayerDataManager playerDataManager;
     private final ScoreboardManager scoreboardManager;
 
-    public PlayerListener(PlayerDataManager playerDataManager, ScoreboardManager scoreboard) {
+    public PlayerConnectionListener(PlayerDataManager playerDataManager, ScoreboardManager scoreboard) {
         this.playerDataManager = playerDataManager;
         this.scoreboardManager = scoreboard;
     }
@@ -24,13 +25,16 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         PlayerData data = playerDataManager.get(player.getUniqueId());
 
-        data.applyAptitudes(player);
+        data.applyHealthAptitude();
 
-        org.bukkit.Bukkit.getScheduler().runTaskLater(ca.pandaaa.animalquest.AnimalQuest.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(AnimalQuest.getPlugin(), () -> {
             if (player.isOnline()) {
+                data.updateManaDisplay();
                 scoreboardManager.setupScoreboard(player);
                 scoreboardManager.updateTablist(player);
-                scoreboardManager.updateTablistHeader(player);
+            }
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                scoreboardManager.updateTablistHeader(onlinePlayer);
             }
         }, 1L);
     }
@@ -39,17 +43,11 @@ public class PlayerListener implements Listener {
     public void onQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         playerDataManager.unloadPlayer(player.getUniqueId());
-    }
 
-    @EventHandler
-    public void onExpBottleThrowEvent(ExpBottleEvent event) {
-        if (event.getEntity().getShooter() instanceof Player) {
-            Player player = (Player) event.getEntity().getShooter();
-            PlayerData data = playerDataManager.get(player.getUniqueId());
-            if (data != null) {
-                data.getMana().addMana(5.0);
-                event.setExperience(0);
+        Bukkit.getScheduler().runTaskLater(AnimalQuest.getPlugin(), () -> {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                scoreboardManager.updateTablistHeader(onlinePlayer);
             }
-        }
+        }, 1L);
     }
 }

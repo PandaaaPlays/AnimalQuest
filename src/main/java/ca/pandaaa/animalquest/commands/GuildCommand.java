@@ -87,7 +87,8 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
         data.setBalance(data.getBalance() - 50000);
 
         guildManager.createGuild(name, tag, player.getUniqueId());
-        player.sendMessage(Utils.applyFormat("&7[&5&lAQ&7] &dGuild &f" + name + " &8[&f" + tag + "&8] &dcreated!"));
+        player.sendMessage(Utils.applyFormat(
+                Utils.getAnimalQuestName() + " &7&l>> &bGuild &f" + name + " &8[&f" + tag + "&8] &bcreated!"));
     }
 
     private void handleDisband(Player player) {
@@ -97,7 +98,7 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
             return;
         }
         guildManager.deleteGuild(guild.getName());
-        player.sendMessage(Utils.applyFormat("&7[&5&lAQ&7] &cGuild disbanded."));
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &cGuild disbanded."));
     }
 
     private void handleInvite(Player player, String[] args) {
@@ -115,7 +116,7 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
             return;
         }
         guildManager.joinGuild(player.getUniqueId(), args[1]);
-        player.sendMessage(Utils.applyFormat("&7[&5&lAQ&7] &dJoined guild " + args[1]));
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bJoined guild " + args[1]));
     }
 
     private void handleLeave(Player player) {
@@ -124,7 +125,7 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
             return;
         }
         guildManager.leaveGuild(player.getUniqueId());
-        player.sendMessage(Utils.applyFormat("&7[&5&lAQ&7] &cYou left the guild."));
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &cYou left the guild."));
     }
 
     private void handleKick(Player player, String[] args) {
@@ -144,7 +145,7 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
             return;
         }
         guildManager.leaveGuild(target.getUniqueId());
-        player.sendMessage(Utils.applyFormat("&7[&5&lAQ&7] &cKicked " + target.getName()));
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &cKicked " + target.getName()));
     }
 
     @Override

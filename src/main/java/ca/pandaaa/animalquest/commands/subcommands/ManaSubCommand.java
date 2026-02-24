@@ -49,9 +49,9 @@ public class ManaSubCommand implements SubCommand {
             return;
         }
 
-        double amount;
+        int amount;
         try {
-            amount = Double.parseDouble(args[3]);
+            amount = Integer.parseInt(args[3]);
         } catch (NumberFormatException e) {
             sender.sendMessage(Utils.applyFormat("&c&l[!] &cInvalid amount."));
             return;
@@ -68,17 +68,17 @@ public class ManaSubCommand implements SubCommand {
             case "add":
                 mana.addMana(amount);
                 sender.sendMessage(Utils.applyFormat(
-                    Utils.getAnimalQuestName() + "&7&l>> &bAdded " + amount + " mana to " + target.getName()));
+                        Utils.getAnimalQuestName() + " &7&l>> &bAdded " + amount + " mana to " + target.getName()));
                 break;
             case "set":
                 mana.setCurrentMana(amount);
                 sender.sendMessage(Utils.applyFormat(
-                    Utils.getAnimalQuestName() + "&7&l>> &bSet " + target.getName() + "'s mana to " + amount));
+                        Utils.getAnimalQuestName() + " &7&l>> &bSet " + target.getName() + "'s mana to " + amount));
                 break;
             case "remove":
                 mana.consumeMana(amount);
-                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bRemoved " + amount
-                    + " mana from " + target.getName()));
+                sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bRemoved " + amount
+                        + " mana from " + target.getName()));
                 break;
             default:
                 sender.sendMessage(Utils.applyFormat("&c&l[!] &cInvalid action. Use add, set or remove."));

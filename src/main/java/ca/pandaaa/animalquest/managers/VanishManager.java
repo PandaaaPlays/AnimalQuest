@@ -1,6 +1,7 @@
 package ca.pandaaa.animalquest.managers;
 
 import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,10 +22,14 @@ public class VanishManager implements Listener {
     }
 
     public void setVanished(Player player, boolean vanished) {
+        PlayerData data = plugin.getPlayerDataManager().get(player.getUniqueId());
+        if (data != null)
+            data.setVanished(vanished);
+
         if (vanished) {
             vanishedPlayers.add(player.getUniqueId());
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!onlinePlayer.hasPermission("animalquest.staff")) {
+                if (!onlinePlayer.hasPermission("animalquest.staff") && !onlinePlayer.equals(player)) {
                     onlinePlayer.hidePlayer(plugin, player);
                 }
             }
@@ -43,10 +48,16 @@ public class VanishManager implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        PlayerData data = plugin.getPlayerDataManager().get(player.getUniqueId());
+
+        if (data != null && data.isVanished()) {
+            setVanished(player, true);
+        }
+
         if (!player.hasPermission("animalquest.staff")) {
             for (UUID vanishedId : vanishedPlayers) {
                 Player vanishedPlayer = Bukkit.getPlayer(vanishedId);
-                if (vanishedPlayer != null) {
+                if (vanishedPlayer != null && !vanishedPlayer.equals(player)) {
                     player.hidePlayer(plugin, vanishedPlayer);
                 }
             }

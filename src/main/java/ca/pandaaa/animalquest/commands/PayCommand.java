@@ -64,9 +64,9 @@ public class PayCommand implements CommandExecutor, TabCompleter {
         playerData.setBalance(playerData.getBalance() - amount);
         targetData.setBalance(targetData.getBalance() + amount);
 
-        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bYou paid &f$"
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bYou paid &f$"
                 + Formats.formatMoney(amount) + " &bto &f" + target.getName() + "&b."));
-        target.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bYou received &f$"
+        target.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bYou received &f$"
                 + Formats.formatMoney(amount) + " &bfrom &f" + player.getName() + "&b."));
         return true;
     }

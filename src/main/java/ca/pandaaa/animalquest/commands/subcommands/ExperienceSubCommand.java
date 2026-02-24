@@ -81,39 +81,43 @@ public class ExperienceSubCommand implements SubCommand {
             case "add":
                 if (type.equals("level")) {
                     playerExperience.addLevel((int) amount);
-                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bAdded " + (int) amount
-                        + " level(s) to " + target.getName()));
+                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bAdded " + (int) amount
+                            + " level(s) to " + target.getName()));
                 } else {
                     playerExperience.addExperience(amount);
                     sender.sendMessage(Utils.applyFormat(
-                        Utils.getAnimalQuestName() + "&7&l>> &bAdded " + amount + " exp to " + target.getName()));
+                            Utils.getAnimalQuestName() + " &7&l>> &bAdded " + amount + " exp to " + target.getName()));
                 }
                 break;
             case "set":
                 if (type.equals("level")) {
                     playerExperience.setLevel((int) amount);
-                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bSet " + target.getName()
-                        + "'s level to " + (int) amount));
+                    sender.sendMessage(
+                            Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bSet " + target.getName()
+                                    + "'s level to " + (int) amount));
                 } else {
                     playerExperience.setExperience(amount);
                     sender.sendMessage(Utils.applyFormat(
-                        Utils.getAnimalQuestName() + "&7&l>> &bSet " + target.getName() + "'s exp to " + amount));
+                            Utils.getAnimalQuestName() + " &7&l>> &bSet " + target.getName() + "'s exp to " + amount));
                 }
                 break;
             case "remove":
                 if (type.equals("level")) {
                     playerExperience.removeLevel((int) amount);
-                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bRemoved " + (int) amount
-                        + " level(s) from " + target.getName()));
+                    sender.sendMessage(
+                            Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bRemoved " + (int) amount
+                                    + " level(s) from " + target.getName()));
                 } else {
                     playerExperience.removeExperience(amount);
-                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + "&7&l>> &bRemoved " + amount
-                        + " exp from " + target.getName()));
+                    sender.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bRemoved " + amount
+                            + " exp from " + target.getName()));
                 }
                 break;
             default:
                 sender.sendMessage(Utils.applyFormat("&c&l[!] &cInvalid action. Use add, set or remove."));
         }
+
+        data.applyHealthAptitude();
     }
 
     @Override

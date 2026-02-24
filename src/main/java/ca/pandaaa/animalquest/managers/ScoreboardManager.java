@@ -49,6 +49,11 @@ public class ScoreboardManager {
 
         player.setScoreboard(board);
         updateScoreboardData(board, playerData);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            updatePlayerTeamOnBoard(onlinePlayer, board);
+        }
+
         updateTablist(player);
     }
 
@@ -97,15 +102,15 @@ public class ScoreboardManager {
         Team progressTeam = board.getTeam("playerProgress");
         if (progressTeam != null) {
             progressTeam.setPrefix(Utils
-                .applyFormat(" &3&l⁎ &bProgress &f" + Formats.formatPercentage(progressPercent) + "%"));
+                    .applyFormat(" &3&l⁎ &bProgress &f" + Formats.formatPercentage(progressPercent) + "%"));
         }
 
         // Experience
         Team experienceTeam = board.getTeam("playerExperience");
         if (experienceTeam != null) {
             experienceTeam
-                .setPrefix(Utils.applyFormat("  &3&l- &f" + Formats.formatExperienceScoreboard(exp.getExperience())
-                    + " / " + Formats.formatExperienceScoreboard(goal)));
+                    .setPrefix(Utils.applyFormat("  &3&l- &f" + Formats.formatExperienceScoreboard(exp.getExperience())
+                            + " / " + Formats.formatExperienceScoreboard(goal)));
         }
 
         // Money
@@ -131,14 +136,77 @@ public class ScoreboardManager {
     }
 
     public void updateTablistHeader(Player player) {
-        player.setPlayerListHeader(Utils.applyFormat("\n" + Utils.getAnimalQuestName() + "\n&bOnline: &f" + Bukkit.getOnlinePlayers().size() + "\n"));
-        player.setPlayerListFooter(Utils.applyFormat("\n&3&lDISCORD &fdiscord.io/AnimalQuest\n&b&lSTORE &fanimalquest.buycraft.net\n"));
+        player.setPlayerListHeader(Utils.applyFormat(
+                "\n" + Utils.getAnimalQuestName() + "\n&bOnline: &f" + getOnlineCount(player) + "\n"));
+        player.setPlayerListFooter(
+                Utils.applyFormat("\n&3&lDISCORD &fdiscord.io/AnimalQuest\n&b&lSTORE &fanimalquest.buycraft.net\n"));
+    }
+
+    private int getOnlineCount(Player viewer) {
+        int count = 0;
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (!plugin.getVanishManager().isVanished(onlinePlayer)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void updateTablist(Player player) {
         PlayerData playerData = this.playerDataManager.get(player.getUniqueId());
+        if (playerData == null)
+            return;
+
         String rankPrefix = Utils.getRankPrefix(player);
-        String level = Utils.applyFormat(" &8[" + playerData.getExperience().getLevelColor() + playerData.getExperience().getLevel() + "&8]");
-        player.setPlayerListName(rankPrefix + player.getName() + level);
+        String level = Utils.applyFormat(
+                " &8[" + playerData.getExperience().getLevelColor() + playerData.getExperience().getLevel() + "&8]");
+
+        String vanishPrefix = "";
+        if (plugin.getVanishManager().isVanished(player)) {
+            vanishPrefix = Utils.applyFormat("&c&lV ");
+        }
+
+        player.setPlayerListName(vanishPrefix + rankPrefix + " " + player.getName() + level);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            updatePlayerTeamOnBoard(player, onlinePlayer.getScoreboard());
+        }
+    }
+
+    private void updatePlayerTeamOnBoard(Player player, Scoreboard board) {
+        PlayerData playerData = this.playerDataManager.get(player.getUniqueId());
+        if (playerData == null)
+            return;
+
+        String teamName = getSortTeamName(player);
+        Team team = board.getTeam(teamName);
+        if (team == null) {
+            team = board.registerNewTeam(teamName);
+        }
+
+        String rankPrefix = Utils.getRankPrefix(player);
+        String level = Utils.applyFormat(
+                " &8[" + playerData.getExperience().getLevelColor() + playerData.getExperience().getLevel() + "&8]");
+
+        team.setPrefix(rankPrefix + " ");
+        team.setSuffix(level);
+
+        if (!team.hasEntry(player.getName())) {
+            team.addEntry(player.getName());
+        }
+    }
+
+    private String getSortTeamName(Player player) {
+        String priority = "99";
+        StaffRank staffRank = StaffRank.getPlayerRank(player);
+        if (staffRank != null) {
+            priority = String.format("%02d", staffRank.ordinal());
+        } else {
+            AnimalRank animalRank = AnimalRank.getPlayerRank(player);
+            if (animalRank != null) {
+                priority = String.format("%02d", 10 - animalRank.getLevel());
+            }
+        }
+        return "sort_" + priority + "_" + player.getName();
     }
 }

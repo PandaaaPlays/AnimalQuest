@@ -1,15 +1,35 @@
 name: AnimalQuest
 version: '1.0-SNAPSHOT'
 main: ca.pandaaa.animalquest.AnimalQuest
-api-version: '1.21'
+api-version: '1.21.11'
 
 commands:
   animalquest:
-    permission: animalquest.admin
-    aliases: [ aq ]
-  jobs:
-  mount:
-    aliases: [ mt ]
+    aliases: [aq]
+    description: AnimalQuest Admin commands.
   menu:
+    description: AnimalQuest Menu command.
+  guild:
+    description: AnimalQuest Guild commands.
+  pay:
+    description: AnimalQuest Pay command.
   aptitudes:
-    aliases: [ apt ]
+    aliases: [apt]
+    description: AnimalQuest Aptitude command.
+  mount:
+    aliases: [mt]
+    description: Spawns your mount.
+  vanish:
+    aliases: [v]
+    description: Vanish.
+  broadcast:
+    aliases: [bc]
+    description: Broadcast.
+  staffchat:
+    aliases: [sc]
+    description: StaffChat.
+  quest:
+    aliases: [q]
+    description: Quest menu and commands.
+  jobs:
+    description: Jobs menu and commands.

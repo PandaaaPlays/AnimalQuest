@@ -1,0 +1,38 @@
+zones:
+  capital:
+    name: "&6&lCapital"
+    subtitle: "&7Sanctuary of the Island"
+    recommended-level: 0
+    biomes:
+      - "PLAINS_FOREST"
+
+  forest:
+    name: "&2&lForest"
+    subtitle: "&7The Hunt Begins"
+    recommended-level: 0
+    biomes:
+      - "FLOWER_FOREST"
+
+  enchanted_lands:
+    name: "&d&lEnchanted Lands"
+    recommended-level: 15
+    biomes:
+      - "JUNGLE"
+
+  canyon:
+    name: "&6&lCanyon"
+    recommended-level: 30
+    biomes:
+      - "BADLANDS"
+
+  sunscar_ravine:
+    name: "&e&lSunscar Ravine"
+    recommended-level: 50
+    biomes:
+      - "PLAINS"
+
+  volcanic_lands:
+    name: "&4&lVolcanic Lands"
+    recommended-level: 75
+    biomes:
+      - "BASALT_DELTAS"

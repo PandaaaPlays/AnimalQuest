@@ -15,7 +15,7 @@ public class Immortal extends Spell {
     @Override
     public void cast(Player player) {
         player.getLocation().getWorld().spawnParticle(Particle.HEART, player.getLocation(), 30, 1.0D, 1.0D, 1.0D);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 12020, 3));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 12020, 4));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 120 * 20, 3));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4));
     }
 }

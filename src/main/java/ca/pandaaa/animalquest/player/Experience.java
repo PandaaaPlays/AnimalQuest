@@ -1,23 +1,27 @@
 package ca.pandaaa.animalquest.player;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.events.PlayerExperienceChangeEvent;
 
 public class Experience {
 
     private int level;
     private double currentExperience;
-    private Runnable onChange;
+    private final UUID uuid;
 
-    public void setOnChange(Runnable onChange) {
-        this.onChange = onChange;
-    }
-
-    public Experience() {
+    public Experience(UUID uuid) {
+        this.uuid = uuid;
         this.level = 1;
         this.currentExperience = 0.0;
     }
 
-    public Experience(int level, double currentExperience) {
+    public Experience(int level, double currentExperience, UUID uuid) {
+        this.uuid = uuid;
         this.level = level;
         this.currentExperience = currentExperience;
     }
@@ -109,7 +113,10 @@ public class Experience {
     }
 
     private void callOnChange() {
-        if (onChange != null)
-            onChange.run();
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null) {
+            Bukkit.getPluginManager().callEvent(
+                    new PlayerExperienceChangeEvent(player, level, currentExperience));
+        }
     }
 }

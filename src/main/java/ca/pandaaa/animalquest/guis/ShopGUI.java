@@ -124,7 +124,7 @@ public class ShopGUI extends AnimalQuestGUI {
         for (ItemStack item : shopItem.getPriceItems()) {
             if (!hasRequiredItem(player, item)) {
                 player.sendMessage(
-                    Utils.applyFormat("&c&l[!] &cYou don't have the required items to purchase this item."));
+                        Utils.applyFormat("&c&l[!] &cYou don't have the required items to purchase this item."));
                 return;
             }
         }
@@ -144,8 +144,8 @@ public class ShopGUI extends AnimalQuestGUI {
 
         player.getInventory().addItem(shopItem.getItem().getItemStack(shopItem.getAmount()));
         if (shopItem.shouldBroadcast()) {
-            Bukkit.broadcastMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &8&l>> &3" + player.getName()
-                + " &bpurchased " + shopItem.getItem().getName() + "."));
+            Bukkit.broadcastMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &3" + player.getName()
+                    + " &bpurchased " + shopItem.getItem().getName() + "."));
         }
     }
 

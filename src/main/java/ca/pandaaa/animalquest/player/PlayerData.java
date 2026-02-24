@@ -1,37 +1,46 @@
 package ca.pandaaa.animalquest.player;
 
 import ca.pandaaa.animalquest.enums.Job;
+import ca.pandaaa.animalquest.enums.MountType;
 import ca.pandaaa.animalquest.player.jobs.JobProgress;
 import ca.pandaaa.animalquest.player.jobs.Jobs;
+import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.bukkit.Location;
-
-import java.util.UUID;
+import org.bukkit.entity.Player;
 
 public class PlayerData implements ConfigurationSerializable {
+    public final static double HEALTH_PER_LEVEL_MULTIPLICATOR = 2D / 5D;
     private final UUID uuid;
     private final Experience experience;
     private final Mana mana;
     private final Aptitudes aptitudes;
     private final Jobs jobs;
-    private final Map<String, Location> homes;
-    private int balance;
+    private final Quests quests;
+    private final Mount mounts;
+    private String home;
+    private double balance;
+    private boolean vanished;
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
-        this.experience = new Experience();
-        this.mana = new Mana();
-        this.aptitudes = new Aptitudes();
+        this.experience = new Experience(uuid);
+        this.aptitudes = new Aptitudes(uuid);
+        this.mana = new Mana(aptitudes, uuid);
         this.jobs = new Jobs();
-        this.homes = new HashMap<>();
+        this.quests = new Quests();
+        this.home = "";
+        this.mounts = new Mount();
         this.balance = 0;
+        this.vanished = false;
         setupListeners();
     }
 
@@ -40,15 +49,14 @@ public class PlayerData implements ConfigurationSerializable {
 
         int level = (int) map.getOrDefault("level", 1);
         double exp = (double) map.getOrDefault("experience", 0.0);
-        this.experience = new Experience(level, exp);
+        this.experience = new Experience(level, exp, uuid);
 
-        double curMana = (double) map.getOrDefault("mana", 50.0);
-        this.mana = new Mana(curMana);
-
+        int curMana = (int) map.getOrDefault("mana", 0);
         int str = (int) map.getOrDefault("aptitude_strength", 0);
         int vit = (int) map.getOrDefault("aptitude_health", 0);
         int intl = (int) map.getOrDefault("aptitude_mana", 0);
-        this.aptitudes = new Aptitudes(str, vit, intl);
+        this.aptitudes = new Aptitudes(str, vit, intl, uuid);
+        this.mana = new Mana(aptitudes, curMana, uuid);
 
         Object jobsData = map.get("jobs");
         Jobs jobsResult;
@@ -59,25 +67,32 @@ public class PlayerData implements ConfigurationSerializable {
         }
         this.jobs = jobsResult;
 
-        this.balance = (int) map.getOrDefault("balance", 0);
-        this.homes = new HashMap<>();
-        if (map.containsKey("homes")) {
-            ConfigurationSection homeSection = (ConfigurationSection) map.get("homes");
-            for (String homeName : homeSection.getKeys(false)) {
-                homes.put(homeName, (Location) homeSection.get(homeName));
-            }
+        Object questsData = map.get("quests");
+        Quests questsResult;
+        if (questsData instanceof ConfigurationSection section) {
+            questsResult = new Quests(section.getValues(false));
+        } else {
+            questsResult = new Quests();
         }
+        this.quests = questsResult;
+
+        Object mountData = map.get("mounts");
+        Mount mount;
+        if (mountData instanceof ConfigurationSection section) {
+            mount = new Mount(section.getValues(false));
+        } else {
+            mount = new Mount();
+        }
+        this.mounts = mount;
+
+        this.balance = (double) map.getOrDefault("balance", 0);
+        this.home = (String) map.getOrDefault("home", "");
+        this.vanished = (boolean) map.getOrDefault("vanished", false);
+
         setupListeners();
     }
 
     private void setupListeners() {
-        experience.setOnChange(() -> {
-            updateScoreboard(org.bukkit.Bukkit.getPlayer(uuid));
-            ca.pandaaa.animalquest.AnimalQuest.getPlugin().getScoreboardManager()
-                    .updateTablist(org.bukkit.Bukkit.getPlayer(uuid));
-        });
-        mana.setOnChange(() -> updateManaDisplay(org.bukkit.Bukkit.getPlayer(uuid)));
-
         var jobsManager = AnimalQuest.getPlugin().getJobsManager();
         if (jobsManager != null) {
             for (Job job : Job.values()) {
@@ -112,50 +127,64 @@ public class PlayerData implements ConfigurationSerializable {
         return jobs;
     }
 
-    public int getBalance() {
+    public Quests getQuests() {
+        return quests;
+    }
+
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
         updateScoreboard(org.bukkit.Bukkit.getPlayer(uuid));
     }
 
-    public Map<String, Location> getHomes() {
-        return homes;
+    public Location getHome() {
+        switch (home.toLowerCase()) {
+            case "capital":
+                return new Location(Bukkit.getWorld("world"), 0, 0, 0);
+        }
+        return new Location(Bukkit.getWorld("world"), 0, 0, 0);
     }
 
-    public void setHome(String name, Location loc) {
-        homes.put(name.toLowerCase(), loc);
+    public void setHome(String name) {
+        home = name;
     }
 
-    public void removeHome(String name) {
-        homes.remove(name.toLowerCase());
+    public Mount getMounts() {
+        return mounts;
     }
 
-    public boolean consumeMana(double amount) {
+    public boolean isVanished() {
+        return vanished;
+    }
+
+    public void setVanished(boolean vanished) {
+        this.vanished = vanished;
+    }
+
+    public boolean consumeMana(int amount) {
         return mana.consumeMana(amount);
     }
 
-    public void applyAptitudes(org.bukkit.entity.Player player) {
-        // Health: 20 baseline + 2 per point
-        double maxHealth = 20.0 + (aptitudes.getHealth() * 2);
-        org.bukkit.attribute.AttributeInstance healthAttr = player
-                .getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH);
+    public void applyHealthAptitude() {
+        double healthFromLevel = experience.getLevel() * HEALTH_PER_LEVEL_MULTIPLICATOR;
+        double healthFromAptitude = aptitudes.getHealth() * Aptitudes.HEALTH_MULTIPLIER;
+        double maxHealth = 20.0 + healthFromAptitude + healthFromLevel;
+        AttributeInstance healthAttr = Objects.requireNonNull(Bukkit.getPlayer(uuid))
+                .getAttribute(Attribute.MAX_HEALTH);
         if (healthAttr != null) {
             healthAttr.setBaseValue(maxHealth);
         }
-
-        // Mana: 20 baseline + 10 per point
-        double maxMana = 50.0 + (aptitudes.getMana() * 10);
-        this.mana.setMaximumMana(maxMana);
-        updateManaDisplay(player);
     }
 
-    public void updateManaDisplay(org.bukkit.entity.Player player) {
+    public void updateManaDisplay() {
+        Player player = Bukkit.getPlayer(uuid);
         if (player == null || !player.isOnline())
             return;
-        float progress = (float) (mana.getCurrentMana() / mana.getMaximumMana());
+        float maxMana = aptitudes.getMana() != 0 ? aptitudes.getMana() * Aptitudes.MANA_MULTIPLIER : 1;
+        float progress = (float) (mana.getCurrentMana() / maxMana);
         player.setExp(Math.min(0.999f, progress));
         player.setLevel((int) mana.getCurrentMana());
     }
@@ -177,8 +206,11 @@ public class PlayerData implements ConfigurationSerializable {
         map.put("aptitude_health", aptitudes.getHealth());
         map.put("aptitude_mana", aptitudes.getMana());
         map.put("jobs", jobs.serialize());
+        map.put("quests", quests.serialize());
         map.put("balance", balance);
-        map.put("homes", homes);
+        map.put("home", home);
+        map.put("mounts", mounts.serialize());
+        map.put("vanished", vanished);
         return map;
     }
 }

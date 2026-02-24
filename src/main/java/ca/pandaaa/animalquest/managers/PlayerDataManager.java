@@ -85,7 +85,8 @@ public class PlayerDataManager {
 
     public void unloadPlayer(UUID uuid) {
         PlayerData data = loadedPlayers.remove(uuid);
-        if (data == null) return;
+        if (data == null)
+            return;
 
         Map<String, Object> snapshot = data.serialize();
         asyncWriteSnapshot(uuid, snapshot);
@@ -94,9 +95,10 @@ public class PlayerDataManager {
     public void initialize() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData data = this.get(player.getUniqueId());
-            data.updateManaDisplay(player);
+            data.updateManaDisplay();
 
-            // Delay setup slightly to ensure everything is initialized and avoid issues during reload
+            // Delay setup slightly to ensure everything is initialized and avoid issues
+            // during reload
             org.bukkit.Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {
                     plugin.getScoreboardManager().setupScoreboard(player);

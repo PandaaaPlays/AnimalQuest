@@ -2,6 +2,8 @@ package ca.pandaaa.animalquest.listeners;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.Guild;
+import ca.pandaaa.animalquest.enums.AnimalRank;
+import ca.pandaaa.animalquest.enums.StaffRank;
 import ca.pandaaa.animalquest.managers.PlayerDataManager;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.managers.StaffManager;
@@ -38,9 +40,9 @@ public class ChatListener implements Listener {
         if (data == null)
             return;
 
-        String rankPrefix = Utils.getRankPrefix(player);
+        String rankPrefix = Utils.applyFormat("&8[&f" + Utils.getRankPrefix(player) + "&8] ");
         String level = Utils
-            .applyFormat("&8[" + data.getExperience().getLevelColor() + data.getExperience().getLevel() + "&8]");
+                .applyFormat("&8[" + data.getExperience().getLevelColor() + data.getExperience().getLevel() + "&8]");
 
         // Guild Tag support
         String guildTag = "";
@@ -49,8 +51,13 @@ public class ChatListener implements Listener {
             guildTag = Utils.applyFormat("&8[&7" + guild.getTag() + "&8] ");
         }
 
-        String format = Utils.applyFormat(guildTag + rankPrefix + "&f" + player.getName() + " " + level + " &8» &f")
-            + message;
-        event.setFormat(format.replace("%", "%%")); // Prevent player from using color codes in message if desired, or andle accordingly
+        String format = Utils.applyFormat(guildTag + rankPrefix + "&f" + player.getName() + " " + level + " &7&l>> &f");
+
+        if (AnimalRank.getPlayerRank(player).getLevel() >= 3) {
+            message.replaceAll("&l", "").replaceAll("&n", "")
+                    .replaceAll("&m", "").replaceAll("&o", "")
+                    .replaceAll("&k", "");
+        }
+        event.setFormat(format + message);
     }
 }

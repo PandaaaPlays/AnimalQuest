@@ -6,6 +6,7 @@ import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -79,7 +80,7 @@ public class AbilityManager implements Listener {
                 break;
             case HEALING_TOUCH:
                 player.setHealth(Math.min(player.getHealth() + 2,
-                    player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue()));
+                    player.getAttribute(Attribute.MAX_HEALTH).getValue()));
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                 break;
             default:

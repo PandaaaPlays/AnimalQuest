@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -30,7 +31,7 @@ public class Cyclone extends Spell {
     private void cycloneTasks(Player player) {
         for (Entity entity : player.getNearbyEntities(6.0D, 6.0D, 6.0D)) {
             Vector vec = new Vector(0, 1.7D, 0);
-            if (!(entity instanceof Player)) {
+            if (!(entity instanceof Player) && !(entity instanceof Item)) {
                 if (entity instanceof Damageable) {
                     ((Damageable) entity).damage(0.5D, player);
                 }

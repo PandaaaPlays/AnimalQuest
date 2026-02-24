@@ -1,8 +1,8 @@
-package ca.pandaaa.animalquest.spells;
+package ca.pandaaa.animalquest.managers;
 
 import ca.pandaaa.animalquest.player.PlayerData;
-import ca.pandaaa.animalquest.managers.PlayerDataManager;
-import org.bukkit.ChatColor;
+import ca.pandaaa.animalquest.spells.*;
+import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -30,6 +30,8 @@ public class SpellManager {
         registerSpell(new LightningSpeed());
         registerSpell(new StoneShield());
         registerSpell(new Strength());
+        registerSpell(new AeroGlide());
+        registerSpell(new NeptunesBlessing());
     }
 
     public void registerSpell(Spell spell) {
@@ -41,8 +43,9 @@ public class SpellManager {
         if (data == null)
             return;
 
-        if (isOnCooldown(player, spell)) {
-            player.sendMessage(ChatColor.RED + "This spell is on cooldown!");
+        long remaining = getRemainingCooldown(player, spell);
+        if (remaining > 0) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cThis spell is on cooldown! (" + remaining + "s)"));
             return;
         }
 
@@ -51,20 +54,26 @@ public class SpellManager {
             spell.cast(player);
             setCooldown(player, spell);
         } else {
-            player.sendMessage(ChatColor.RED + "Not enough mana!");
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cNot enough mana!"));
         }
     }
 
-    private boolean isOnCooldown(Player player, Spell spell) {
+    private long getRemainingCooldown(Player player, Spell spell) {
         Map<String, Long> playerCooldowns = cooldowns.get(player.getUniqueId());
         if (playerCooldowns == null)
-            return false;
+            return 0;
 
         Long lastCast = playerCooldowns.get(spell.getId());
         if (lastCast == null)
-            return false;
+            return 0;
 
-        return (System.currentTimeMillis() - lastCast) < (spell.getCooldownSeconds() * 1000L);
+        long timeSinceCast = System.currentTimeMillis() - lastCast;
+        long cooldownMillis = spell.getCooldownSeconds() * 1000L;
+
+        if (timeSinceCast >= cooldownMillis)
+            return 0;
+
+        return (cooldownMillis - timeSinceCast) / 1000L + 1;
     }
 
     private void setCooldown(Player player, Spell spell) {

@@ -1,5 +1,7 @@
 package ca.pandaaa.animalquest.guis;
 
+import ca.pandaaa.animalquest.enums.Job;
+import ca.pandaaa.animalquest.managers.JobRewardManager;
 import ca.pandaaa.animalquest.player.jobs.JobProgress;
 import ca.pandaaa.animalquest.player.jobs.Jobs;
 import ca.pandaaa.animalquest.utils.Utils;
@@ -19,67 +21,117 @@ import java.util.List;
 
 public class JobsGUI extends AnimalQuestGUI implements EventListener {
 
-    private static final String TITLE = Utils.applyFormat("&8» &eJobs");
-    private static final int SLOT_LUMBERJACK = 10;
-    private static final int SLOT_MINER = 12;
-    private static final int SLOT_ALCHEMIST = 14;
-    private static final int SLOT_EXPLORER = 16;
+    private static final String TITLE = Utils.applyFormat("&8Jobs &8&l>> &8Progress");
 
     public JobsGUI() {
-        super(27, TITLE);
+        super(45, TITLE);
     }
 
     public void openInventory(Player player, Jobs jobs) {
-        Inventory inv = Bukkit.createInventory(null, 27, TITLE);
+        Inventory inv = Bukkit.createInventory(null, 45, TITLE);
 
-        inv.setItem(SLOT_LUMBERJACK, createJobItem(Material.OAK_LOG, "&6Lumberjack", jobs.getLumberjack()));
-        inv.setItem(SLOT_MINER, createJobItem(Material.DIAMOND_PICKAXE, "&7Miner", jobs.getMiner()));
-        inv.setItem(SLOT_ALCHEMIST, createJobItem(Material.BREWING_STAND, "&dAlchemist", jobs.getAlchemist()));
-        inv.setItem(SLOT_EXPLORER, createJobItem(Material.COMPASS, "&bExplorer", jobs.getExplorer()));
+        // Fill background
+        ItemStack filler = createFillerItem();
+        for (int i = 0; i < inv.getSize(); i++) {
+            inv.setItem(i, filler);
+        }
+
+        // Job items
+        inv.setItem(20, createJobItem(Job.LUMBERJACK, jobs.getLumberjack()));
+        inv.setItem(21, createJobItem(Job.MINER, jobs.getMiner()));
+        inv.setItem(23, createJobItem(Job.ALCHEMIST, jobs.getAlchemist()));
+        inv.setItem(24, createJobItem(Job.EXPLORER, jobs.getExplorer()));
+
+        // Back button (assuming there is one in AnimalQuestGUI or Menu)
+        inv.setItem(40, createBackItem());
 
         player.openInventory(inv);
     }
 
-    private ItemStack createJobItem(Material material, String displayName, JobProgress progress) {
-        ItemStack item = new ItemStack(material);
+    private ItemStack createJobItem(Job job, JobProgress progress) {
+        ItemStack item = new ItemStack(job.getIcon());
         ItemMeta meta = item.getItemMeta();
         if (meta == null)
             return item;
 
-        meta.setDisplayName(Utils.applyFormat(displayName));
-        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ATTRIBUTES,
-            ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ARMOR_TRIM,
-            ItemFlag.HIDE_DYE);
+        meta.setDisplayName(Utils.applyFormat(job.getDisplayName()));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         List<String> lore = new ArrayList<>();
-        lore.add(Utils.applyFormat("&7Lvl &f" + progress.getLevel() + "&7/&f" + progress.getMaxLevel()));
+        lore.add(Utils.applyFormat("&7" + job.getDescription()));
+        lore.add("");
+        lore.add(Utils.applyFormat("&bLevel: &f" + progress.getLevel() + " &8/ &f" + progress.getMaxLevel()));
         lore.add(createExpBar(progress.getExperience(), progress.getGoalExperience(), 20));
+        lore.add("");
+
+        lore.add(Utils.applyFormat("&3&lUnlocks:"));
+        // Current level unlocks
+        for (int i = 1; i <= progress.getLevel(); i++) {
+            List<String> r = JobRewardManager.getRewardsForLevel(job, i);
+            if (!r.isEmpty()) {
+                for (String s : r)
+                    lore.add(Utils.applyFormat(" &a✔ " + s));
+            }
+        }
+
+        // Next level unlocks
+        if (progress.getLevel() < progress.getMaxLevel()) {
+            for (int i = progress.getLevel() + 1; i <= progress.getMaxLevel(); i++) {
+                List<String> r = JobRewardManager.getRewardsForLevel(job, i);
+                if (!r.isEmpty()) {
+                    lore.add(Utils.applyFormat("&8&lNext at Lvl " + i + ":"));
+                    for (String s : r)
+                        lore.add(Utils.applyFormat(" &c✖ " + s));
+                    break;
+                }
+            }
+        }
+
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
     }
 
-    private String createExpBar(double current, double goal, int barLength) {
-        int currentInt = (int) current;
-        if (goal <= 0) {
-            return Utils.applyFormat(currentInt + " &a" + "|".repeat(barLength) + " &7MAX");
+    private ItemStack createFillerItem() {
+        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(" ");
+            item.setItemMeta(meta);
         }
-        int goalInt = (int) goal;
-        int filled = (int) Math.min(barLength, (current / goal) * barLength);
-        String green = "&a" + "|".repeat(filled);
-        String gray = "&7" + "|".repeat(barLength - filled);
-        return Utils.applyFormat(currentInt + " " + green + gray + " " + goalInt);
+        return item;
     }
 
-    public boolean isJobsGUI(String title) {
-        return title != null && title.equals(TITLE);
+    private ItemStack createBackItem() {
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(Utils.applyFormat("&c&lBack"));
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    private String createExpBar(double current, double goal, int barLength) {
+        if (goal <= 0) {
+            return Utils.applyFormat("&a" + "■".repeat(barLength) + " &7MAX");
+        }
+        int filled = (int) Math.min(barLength, (current / goal) * barLength);
+        String green = "&b" + "■".repeat(filled);
+        String gray = "&8" + "■".repeat(barLength - filled);
+        return Utils.applyFormat("&r" + green + gray + " &f" + (int) current + "&7/&f" + (int) goal);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!isJobsGUI(event.getView().getTitle())) {
+        if (!isEventRelevant(event.getView().getTopInventory())) {
             return;
         }
+
         event.setCancelled(true);
+        if (event.getSlot() == 40) {
+            Player player = (Player) event.getWhoClicked();
+            new MenuGUI().openInventory(player);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package ca.pandaaa.animalquest.commands.subcommands;
 
 import ca.pandaaa.animalquest.AnimalQuest;
-import ca.pandaaa.animalquest.commands.subcommands.SubCommand;
 import ca.pandaaa.animalquest.utils.Utils;
 import ca.pandaaa.animalquest.spells.Spell;
 import org.bukkit.Bukkit;
@@ -45,16 +44,25 @@ public class SpellSubCommand implements SubCommand {
             return;
         }
 
+        if (args[3].equalsIgnoreCase("all")) {
+            for (Spell spell : AnimalQuest.getPlugin().getSpellManager().getRegisteredSpells().values()) {
+                target.getInventory().addItem(spell.getItem());
+            }
+            sender.sendMessage(Utils.applyFormat(
+                    Utils.getAnimalQuestName() + " &7&l>> &bGave ALL spells to " + target.getName()));
+            return;
+        }
+
         Spell spell = AnimalQuest.getPlugin().getSpellManager().getSpellById(args[3]);
         if (spell == null) {
             sender.sendMessage(Utils.applyFormat("&c&l[!] &cSpell not found. Registered spells: "
-                + String.join(", ", AnimalQuest.getPlugin().getSpellManager().getRegisteredSpells().keySet())));
+                    + String.join(", ", AnimalQuest.getPlugin().getSpellManager().getRegisteredSpells().keySet())));
             return;
         }
 
         target.getInventory().addItem(spell.getItem());
         sender.sendMessage(Utils.applyFormat(
-            Utils.getAnimalQuestName() + "&7&l>> &bGave " + spell.getName() + " to " + target.getName()));
+                Utils.getAnimalQuestName() + " &7&l>> &bGave " + spell.getName() + " to " + target.getName()));
     }
 
     @Override
@@ -68,7 +76,10 @@ public class SpellSubCommand implements SubCommand {
             }
             return playerNames;
         } else if (args.length == 4) {
-            return new ArrayList<>(AnimalQuest.getPlugin().getSpellManager().getRegisteredSpells().keySet());
+            List<String> suggestions = new ArrayList<>(
+                    AnimalQuest.getPlugin().getSpellManager().getRegisteredSpells().keySet());
+            suggestions.add("all");
+            return suggestions;
         }
         return null;
     }
