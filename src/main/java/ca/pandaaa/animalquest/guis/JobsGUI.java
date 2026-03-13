@@ -5,47 +5,39 @@ import ca.pandaaa.animalquest.managers.JobRewardManager;
 import ca.pandaaa.animalquest.player.jobs.JobProgress;
 import ca.pandaaa.animalquest.player.jobs.Jobs;
 import ca.pandaaa.animalquest.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
-public class JobsGUI extends AnimalQuestGUI implements EventListener {
+public class JobsGUI extends AnimalQuestGUI {
 
     private static final String TITLE = Utils.applyFormat("&8Jobs &8&l>> &8Progress");
 
     public JobsGUI() {
-        super(45, TITLE);
+        super(27, TITLE);
     }
 
     public void openInventory(Player player, Jobs jobs) {
-        Inventory inv = Bukkit.createInventory(null, 45, TITLE);
-
         // Fill background
         ItemStack filler = createFillerItem();
-        for (int i = 0; i < inv.getSize(); i++) {
-            inv.setItem(i, filler);
+        for (int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, filler);
         }
 
         // Job items
-        inv.setItem(20, createJobItem(Job.LUMBERJACK, jobs.getLumberjack()));
-        inv.setItem(21, createJobItem(Job.MINER, jobs.getMiner()));
-        inv.setItem(23, createJobItem(Job.ALCHEMIST, jobs.getAlchemist()));
-        inv.setItem(24, createJobItem(Job.EXPLORER, jobs.getExplorer()));
+        inventory.setItem(10, createJobItem(Job.LUMBERJACK, jobs.getLumberjack()));
+        inventory.setItem(12, createJobItem(Job.MINER, jobs.getMiner()));
+        inventory.setItem(14, createJobItem(Job.ALCHEMIST, jobs.getAlchemist()));
+        inventory.setItem(16, createJobItem(Job.EXPLORER, jobs.getExplorer()));
 
-        // Back button (assuming there is one in AnimalQuestGUI or Menu)
-        inv.setItem(40, createBackItem());
-
-        player.openInventory(inv);
+        player.openInventory(inventory);
     }
 
     private ItemStack createJobItem(Job job, JobProgress progress) {
@@ -102,16 +94,6 @@ public class JobsGUI extends AnimalQuestGUI implements EventListener {
         return item;
     }
 
-    private ItemStack createBackItem() {
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(Utils.applyFormat("&c&lBack"));
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-
     private String createExpBar(double current, double goal, int barLength) {
         if (goal <= 0) {
             return Utils.applyFormat("&a" + "■".repeat(barLength) + " &7MAX");
@@ -129,9 +111,5 @@ public class JobsGUI extends AnimalQuestGUI implements EventListener {
         }
 
         event.setCancelled(true);
-        if (event.getSlot() == 40) {
-            Player player = (Player) event.getWhoClicked();
-            new MenuGUI().openInventory(player);
-        }
     }
 }

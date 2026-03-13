@@ -9,11 +9,13 @@ public class PlayerExperienceChangeEvent extends Event {
     private final Player player;
     private final int level;
     private final double exp;
+    private final double addedExp;
 
-    public PlayerExperienceChangeEvent(Player player, int level, double exp) {
+    public PlayerExperienceChangeEvent(Player player, int level, double exp, double addedExp) {
         this.player = player;
         this.level = level;
         this.exp = exp;
+        this.addedExp = addedExp;
     }
 
     public Player getPlayer() {
@@ -26,6 +28,10 @@ public class PlayerExperienceChangeEvent extends Event {
 
     public double getExp() {
         return exp;
+    }
+
+    public double getAddedExp() {
+        return addedExp;
     }
 
     @Override

@@ -10,7 +10,7 @@ public class NeptunesBlessing extends Spell {
     public NeptunesBlessing() {
         super("neptunes_blessing", "Neptune's Blessing", 30, 60,
                 "Receive the blessing of the sea. Grants water breathing, night vision, and swiftness in the water.",
-                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmM1NmFmZDYyMTFhNWU2Zjk2NjYxZDIzZGYzMjVmMDUzYWU2YWFmMTJiZWY5YzI5ZjdkN2UxMmFjOTZjNmNmIn19fQ==");
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMyMzllNzE1NjllMTg0ZjIzZWVkODNmMTJjYzU5NDg1MjQ3Y2I5MjRlODAyNTY2ZGQwOTdjNmM3Mjg0MmNiNyJ9fX0=");
     }
 
     @Override

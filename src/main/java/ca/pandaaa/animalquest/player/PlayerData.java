@@ -1,7 +1,6 @@
 package ca.pandaaa.animalquest.player;
 
 import ca.pandaaa.animalquest.enums.Job;
-import ca.pandaaa.animalquest.enums.MountType;
 import ca.pandaaa.animalquest.player.jobs.JobProgress;
 import ca.pandaaa.animalquest.player.jobs.Jobs;
 import org.bukkit.Bukkit;
@@ -143,9 +142,13 @@ public class PlayerData implements ConfigurationSerializable {
     public Location getHome() {
         switch (home.toLowerCase()) {
             case "capital":
-                return new Location(Bukkit.getWorld("world"), 0, 0, 0);
+                return new Location(Bukkit.getWorld("world"), -42.5, 28, 3.5, 135f, 0f);
         }
-        return new Location(Bukkit.getWorld("world"), 0, 0, 0);
+        return new Location(Bukkit.getWorld("world"), 695.5, 39, -40.5, 0f, 0f);
+    }
+
+    public String getHomeName() {
+        return home;
     }
 
     public void setHome(String name) {

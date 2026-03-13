@@ -1,10 +1,13 @@
 package ca.pandaaa.animalquest.listeners;
 
+import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.events.PlayerAptitudeChangeEvent;
 import ca.pandaaa.animalquest.events.PlayerExperienceChangeEvent;
 import ca.pandaaa.animalquest.events.PlayerManaChangeEvent;
 import ca.pandaaa.animalquest.managers.PlayerDataManager;
+import ca.pandaaa.animalquest.managers.QuestManager;
 import ca.pandaaa.animalquest.managers.ScoreboardManager;
+import ca.pandaaa.animalquest.quests.QuestObjective;
 import ca.pandaaa.animalquest.player.Aptitudes;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.utils.CustomUnbreaking;
@@ -95,6 +98,7 @@ public class PlayerGameplayListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.setDeathMessage(null);
         event.setDroppedExp(0);
+        event.getDrops().clear();
         event.setKeepInventory(true);
         if (event.getEntity().getKiller() instanceof Player) {
             Player player = event.getEntity();
@@ -137,10 +141,16 @@ public class PlayerGameplayListener implements Listener {
 
     @EventHandler
     public void onExperienceChange(PlayerExperienceChangeEvent event) {
-        PlayerData data = playerDataManager.get(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        PlayerData data = playerDataManager.get(player.getUniqueId());
         if (data != null) {
-            data.updateScoreboard(event.getPlayer());
-            scoreboardManager.updateTablist(event.getPlayer());
+            data.updateScoreboard(player);
+            scoreboardManager.updateTablist(player);
+
+            // Update quests related to experience and levels
+            QuestManager qm = AnimalQuest.getPlugin().getQuestManager();
+            qm.updateQuestProgress(player, QuestObjective.ObjectiveType.GAIN_EXPERIENCE, "", (int) event.getAddedExp());
+            qm.updateQuestProgress(player, QuestObjective.ObjectiveType.REACH_LEVEL, "", event.getLevel());
         }
     }
 

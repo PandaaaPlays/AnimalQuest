@@ -8,6 +8,7 @@ import ca.pandaaa.animalquest.utils.Formats;
 import ca.pandaaa.animalquest.utils.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +29,8 @@ public class ShopGUI extends AnimalQuestGUI {
     private final Map<Integer, ShopItem> slotToItemMap;
 
     public ShopGUI(Shop shop) {
-        super(calculateSize(shop.getItems().size()), "&8Shop &8&l>> &8" + shop.getName());
+        super(calculateSize(shop.getItems().size()),
+                "&8Shop &8&l>> &8" + ChatColor.stripColor(Utils.applyFormat(shop.getName())));
         this.shop = shop;
         this.slotToItemMap = new HashMap<>();
         initializeItems();
@@ -47,7 +49,7 @@ public class ShopGUI extends AnimalQuestGUI {
             if (slot >= inventory.getSize())
                 break;
 
-            ItemStack displayItem = shopItem.getItem().getItemStack(shopItem.getAmount());
+            ItemStack displayItem = shopItem.getItemStack();
             ItemMeta meta = displayItem.getItemMeta();
             if (meta != null) {
                 List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
@@ -60,9 +62,7 @@ public class ShopGUI extends AnimalQuestGUI {
                 for (ItemStack item : shopItem.getPriceItems()) {
                     String itemName;
                     if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                        itemName = item.getItemMeta().getDisplayName();
-                    } else if (item.getType() == Material.LAPIS_LAZULI) {
-                        itemName = Utils.applyFormat(item.getAmount() != 1 ? "&9Sapphires" : "&9Sapphire");
+                        itemName = item.getItemMeta().getDisplayName() + (item.getAmount() != 1 ? "s" : "");
                     } else {
                         itemName = Utils.getSentenceCase(item.getType().toString());
                     }
@@ -142,10 +142,13 @@ public class ShopGUI extends AnimalQuestGUI {
             removeRequiredItem(player, item);
         }
 
-        player.getInventory().addItem(shopItem.getItem().getItemStack(shopItem.getAmount()));
+        ItemStack purchasedStack = shopItem.getItemStack();
+        player.getInventory().addItem(purchasedStack);
         if (shopItem.shouldBroadcast()) {
+            String itemName = shopItem.getItem() != null ? shopItem.getItem().getName()
+                    : purchasedStack.getItemMeta().getDisplayName();
             Bukkit.broadcastMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &3" + player.getName()
-                    + " &bpurchased " + shopItem.getItem().getName() + "."));
+                    + " &bpurchased " + itemName + "."));
         }
     }
 

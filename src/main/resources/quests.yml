@@ -1,0 +1,73 @@
+quests:
+  gourmet_delivery:
+    name: "Gourmet's Delivery"
+    description: "Help the Gourmet prepare a feast!"
+    icon: "COOKED_BEEF"
+    required_level: 1
+    steps:
+      1:
+        description: "Talk to Gourmet"
+        type: "TALK_TO_NPC"
+        target: "Gourmet"
+        location:
+          world: "world"
+          x: 10.5
+          y: 70.0
+          z: 20.5
+      2:
+        description: "Deliver Chicken"
+        type: "DELIVER_ITEM"
+        amount: 5
+        target: "Gourmet:CHICKEN"
+      3:
+        description: "Deliver Pork"
+        type: "DELIVER_ITEM"
+        amount: 5
+        target: "Gourmet:PORKCHOP"
+      4:
+        description: "Deliver Turtle Egg"
+        type: "DELIVER_ITEM"
+        amount: 1
+        target: "Gourmet:TURTLE_EGG"
+    rewards:
+      money: 500
+  quarry_master:
+    name: "The Quarry Master"
+    description: "Help the Mason at the quarry."
+    icon: "IRON_PICKAXE"
+    required_level: 1
+    steps:
+      1:
+        description: "Talk to Mason"
+        type: "TALK_TO_NPC"
+        target: "Mason"
+        location:
+          world: "world"
+          x: -50.5
+          y: 65.0
+          z: -10.5
+      2:
+        description: "Mine Cobblestone"
+        type: "BREAK_BLOCK"
+        amount: 32
+        target: "COBBLESTONE"
+      3:
+        description: "Mine Diorite"
+        type: "BREAK_BLOCK"
+        amount: 16
+        target: "DIORITE"
+      4:
+        description: "Return to Mason"
+        type: "TALK_TO_NPC"
+        target: "Mason"
+        location:
+          world: "world"
+          x: -50.5
+          y: 65.0
+          z: -10.5
+    rewards:
+      money: 1000
+      items:
+        1:
+          material: "GOLD_INGOT"
+          amount: 5

@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.player.PlayerData;
+import ca.pandaaa.animalquest.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,19 +66,19 @@ public class QuestReward {
 
     public List<String> getRewardDescription() {
         List<String> description = new ArrayList<>();
-        description.add("§6§lRewards:");
+        description.add(Utils.applyFormat("&e&lRewards:"));
 
         if (experience > 0) {
-            description.add("§e  +" + experience + " Experience");
+            description.add(Utils.applyFormat("&b + &f" + experience + " EXP"));
         }
 
         if (money > 0) {
-            description.add("§6  +$" + money);
+            description.add(Utils.applyFormat("&a + &f$" + money));
         }
 
         for (ItemStack item : items) {
             if (item != null && item.getType() != Material.AIR) {
-                description.add("§a  +" + item.getAmount() + "x " + item.getType().name());
+                description.add(Utils.applyFormat("&e + &f" + item.getAmount() + "x " + item.getType().name()));
             }
         }
 

@@ -25,6 +25,8 @@ public class QuestStep {
     }
 
     public String getProgressString(int progress) {
+        if (objective.getType() == QuestObjective.ObjectiveType.TALK_TO_NPC)
+            return "";
         return progress + "/" + objective.getRequiredAmount();
     }
 }

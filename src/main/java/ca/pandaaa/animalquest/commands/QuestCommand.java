@@ -1,8 +1,9 @@
 package ca.pandaaa.animalquest.commands;
 
 import ca.pandaaa.animalquest.AnimalQuest;
-import ca.pandaaa.animalquest.guis.QuestsGUI;
-import ca.pandaaa.animalquest.quests.Quest;
+import ca.pandaaa.animalquest.guis.quests.QuestDetailsGUI;
+import ca.pandaaa.animalquest.guis.quests.QuestsGUI;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +12,8 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+
+// TODO SOLIDE
 
 /**
  * Command handler for quest-related commands
@@ -24,8 +27,7 @@ public class QuestCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            // Open quest GUI
-            new QuestsGUI().openMainMenu(player);
+            new QuestsGUI().openInventory(player);
             return true;
         }
 
@@ -33,12 +35,10 @@ public class QuestCommand implements CommandExecutor, TabCompleter {
 
         switch (subCommand) {
             case "list":
-                // List all active quests
                 listActiveQuests(player);
                 break;
 
             case "track":
-                // Track a specific quest
                 if (args.length < 2) {
                     player.sendMessage("§cUsage: /quest track <questId>");
                     return true;
@@ -66,7 +66,7 @@ public class QuestCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage("§cUsage: /quest info <questId>");
                     return true;
                 }
-                new QuestsGUI().openQuestDetails(player, args[1]);
+                new QuestDetailsGUI().openInventory(player, args[1], "Main Menu");
                 break;
 
             default:

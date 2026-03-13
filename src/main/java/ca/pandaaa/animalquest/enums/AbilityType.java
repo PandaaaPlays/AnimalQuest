@@ -2,9 +2,10 @@ package ca.pandaaa.animalquest.enums;
 
 public enum AbilityType {
     DASH("&b&lDASH", "&7Quickly dash forward."),
-    LEAP("&a&lLEAP", "&7Leap into the air."),
     LIGHTNING_STRIKE("&e&lLIGHTNING STRIKE", "&7Strikes lightning on hit."),
-    HEALING_TOUCH("&d&lHEALING TOUCH", "&7Heals you when you hit an enemy.");
+    LIFESTEAL("&4&lLIFESTEAL", "&7Steals health from your enemies."),
+    FIRE_AURA("&6&lFIRE AURA", "&7Sets nearby enemies on fire."),
+    EXPLOSIVE_HIT("&c&lEXPLOSIVE HIT", "&7Chance to cause an explosion on hit.");
 
     private final String displayName;
     private final String description;

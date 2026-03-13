@@ -1,0 +1,117 @@
+npcs:
+  home_capital:
+    type: HOME
+    subtype: capital
+    name: "&b&lCapital"
+    profession: CARTOGRAPHER
+    villager_type: TAIGA
+    location: world;-50.5;27;3.5;-150;0
+  shop_sword:
+    type: SHOP
+    subtype: sword
+    profession: WEAPONSMITH
+    villager_type: SAVANNA
+    location: world;-3.5;28;-16.5;0;0
+  shop_armor:
+    type: SHOP
+    subtype: armor
+    profession: ARMORER
+    villager_type: JUNGLE
+    location: world;4.5;28;-16.5;0;0
+  shop_magic:
+    type: SHOP
+    subtype: magic
+    profession: CLERIC
+    villager_type: SWAMP
+    location: world;-39.5;26;18.5;180;0
+  shop_bow:
+    type: SHOP
+    subtype: bow
+    profession: FLETCHER
+    location: world;-9.5;28;-22.5;0;0
+  shop_mount:
+    type: SHOP
+    subtype: mount
+    profession: 
+    location: world;-75.5;26;0.5;90;0
+  shop_minerals:
+    type: SHOP
+    subtype: minerals
+    profession: MASON
+    location: world;22.5;28;-8.5;90;0
+  shop_spells:
+    type: SHOP
+    subtype: spells
+    profession: LIBRARIAN
+    location: world;-195.5;64;-218.5;0;0
+  shop_fisherman:
+    type: SHOP
+    subtype: fisherman
+    profession: FISHERMAN
+    location: world;-42.5;26;61.5;90;0
+  shop_butcher:
+    type: SHOP
+    subtype: butcher
+    profession: BUTCHER
+    location: world;-17.5;26;-4.5;0;0
+  repair_sword:
+    type: REPAIR
+    subtype: sword
+    name: "&8&lBlacksmith"
+    profession: TOOLSMITH
+    location: world;32.5;29;-10.5;0;0
+  repair_armor:
+    type: REPAIR
+    subtype: armor
+    name: "&3&lArmorer"
+    profession: LEATHERWORKER
+    location: world;32.5;29;-20.5;0;0
+  mount_croissant:
+    type: MOUNT
+    subtype: croissant
+    name: "&6&lCroissant"
+    entity_type: HORSE
+    immobile: false
+    location: world;-85.5;26;20.5;0;0
+  mount_sushi:
+    type: MOUNT
+    subtype: sushi
+    name: "&6&lSushi"
+    entity_type: HORSE
+    immobile: false
+    location: world;-85.5;26;13.5;0;0
+  mount_hot_dog:
+    type: MOUNT
+    subtype: hot_dog
+    name: "&6&lHot Dog"
+    entity_type: HORSE
+    immobile: false
+    location: world;-85.5;26;6.5;0;0
+  mount_soup:
+    type: MOUNT
+    subtype: soup
+    name: "&6&lSoup"
+    entity_type: HORSE
+    immobile: false
+    location: world;-85.5;26;-0.5;0;0
+  mount_apple_pie:
+    type: MOUNT
+    subtype: apple_pie
+    name: "&6&lApple Pie"
+    entity_type: HORSE
+    immobile: false
+    location: world;-85.5;26;-7.5;0;0
+  mount_zoey:
+    type: MOUNT
+    subtype: zoey
+    name: "&6&lZoey"
+    entity_type: NAUTILUS
+    immobile: false
+    location: world;-73.5;26;24.5;0;0
+  mount_coraline:
+    type: MOUNT
+    subtype: coraline
+    name: "&6&lCoraline"
+    entity_type: ZOMBIE_NAUTILUS
+    immobile: false
+    location: world;-73.5;26;16.5;0;0

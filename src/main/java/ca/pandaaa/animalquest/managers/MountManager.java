@@ -19,7 +19,8 @@ import java.util.UUID;
 
 public class MountManager {
     private final PlayerDataManager playerDataManager;
-    private final Map<UUID, Long> cooldown = new HashMap<>();
+    private final Map<UUID, Long> groundCooldown = new HashMap<>();
+    private final Map<UUID, Long> waterCooldown = new HashMap<>();
 
     public MountManager(PlayerDataManager playerDataManager) {
         this.playerDataManager = playerDataManager;
@@ -59,11 +60,6 @@ public class MountManager {
             if (type.getStyle() != null)
                 horse.setStyle(type.getStyle());
 
-            // Apply Armor
-            if (type.getArmor() != null) {
-                horse.getInventory().setArmor(new ItemStack(type.getArmor()));
-            }
-
             if (horse.getAttribute(Attribute.JUMP_STRENGTH) != null) {
                 horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(type.getJumpStrength());
             }
@@ -71,15 +67,16 @@ public class MountManager {
 
         if (mount instanceof AbstractNautilus nautilus) {
             nautilus.getEquipment().setItem(EquipmentSlot.SADDLE, new ItemStack(Material.SADDLE));
-            if (type.getArmor() != null) {
-                nautilus.getEquipment().setItem(EquipmentSlot.BODY, new ItemStack(type.getArmor()));
-            }
             nautilus.setTamed(true);
             nautilus.setOwner(player);
         }
 
         mount.addPassenger(player);
-        cooldown.put(player.getUniqueId(), System.currentTimeMillis());
+        if (inWater) {
+            waterCooldown.put(player.getUniqueId(), System.currentTimeMillis());
+        } else {
+            groundCooldown.put(player.getUniqueId(), System.currentTimeMillis());
+        }
     }
 
     private boolean isObstructed(Player player) {
@@ -90,8 +87,7 @@ public class MountManager {
                     Location playerLocation = player.getLocation();
                     Location location = new Location(player.getWorld(), playerLocation.getX() + x,
                             playerLocation.getY() + y, playerLocation.getZ() + z);
-                    if (!location.getBlock().getType().equals(Material.AIR)
-                            && !location.getBlock().getType().equals(Material.WATER)) {
+                    if (!location.getBlock().isPassable()) {
                         isObstructed = true;
                     }
                 }
@@ -101,7 +97,8 @@ public class MountManager {
     }
 
     public long getRemainingCooldown(Player player, MountType type) {
-        Long playerCooldown = cooldown.get(player.getUniqueId());
+        Long playerCooldown = type.isInWater() ? waterCooldown.get(player.getUniqueId())
+                : groundCooldown.get(player.getUniqueId());
         if (playerCooldown == null)
             return 0;
         long timeSinceCast = System.currentTimeMillis() - playerCooldown;

@@ -26,6 +26,16 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static java.util.List<String> applyFormat(java.util.List<String> messages) {
+        java.util.List<String> formatted = new java.util.ArrayList<>();
+        if (messages == null)
+            return formatted;
+        for (String message : messages) {
+            formatted.add(applyFormat(message));
+        }
+        return formatted;
+    }
+
     public static String getSentenceCase(String string) {
         return string.toUpperCase().substring(0, 1) + string.toLowerCase().substring(1).replaceAll("_", " ");
     }

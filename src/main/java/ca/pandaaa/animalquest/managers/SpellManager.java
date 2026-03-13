@@ -32,6 +32,13 @@ public class SpellManager {
         registerSpell(new Strength());
         registerSpell(new AeroGlide());
         registerSpell(new NeptunesBlessing());
+        registerSpell(new AbyssalAnchor());
+        registerSpell(new GravityPull());
+        registerSpell(new SonicBoom());
+        registerSpell(new StaticDischarge());
+        registerSpell(new VampiricTouch());
+        registerSpell(new MeteorRain());
+        registerSpell(new PhoenixRebirth());
     }
 
     public void registerSpell(Spell spell) {
@@ -45,7 +52,14 @@ public class SpellManager {
 
         long remaining = getRemainingCooldown(player, spell);
         if (remaining > 0) {
-            player.sendMessage(Utils.applyFormat("&c&l[!] &cThis spell is on cooldown! (" + remaining + "s)"));
+            if (!(spell.getId().equals("abyssal_anchor") && remaining >= 20)) {
+                player.sendMessage(Utils.applyFormat("&c&l[!] &cThis spell is on cooldown! (" + remaining + "s)"));
+                return;
+            }
+        }
+
+        if (spell.getId().equals("abyssal_anchor")) {
+            spell.cast(player);
             return;
         }
 
@@ -58,7 +72,7 @@ public class SpellManager {
         }
     }
 
-    private long getRemainingCooldown(Player player, Spell spell) {
+    public long getRemainingCooldown(Player player, Spell spell) {
         Map<String, Long> playerCooldowns = cooldowns.get(player.getUniqueId());
         if (playerCooldowns == null)
             return 0;
@@ -76,7 +90,7 @@ public class SpellManager {
         return (cooldownMillis - timeSinceCast) / 1000L + 1;
     }
 
-    private void setCooldown(Player player, Spell spell) {
+    public void setCooldown(Player player, Spell spell) {
         cooldowns.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>()).put(spell.getId(),
                 System.currentTimeMillis());
     }

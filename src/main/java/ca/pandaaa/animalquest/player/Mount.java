@@ -11,13 +11,22 @@ public class Mount implements ConfigurationSerializable {
     private MountType groundMount;
 
     public Mount() {
-        waterMount = MountType.X;
-        groundMount = MountType.A;
+        waterMount = MountType.ZOEY;
+        groundMount = MountType.CROISSANT;
     }
 
     public Mount(Map<String, Object> map) {
-        this.groundMount = MountType.valueOf((String) map.getOrDefault("ground-mount", "A"));
-        this.waterMount = MountType.valueOf((String) map.getOrDefault("water-mount", "X"));
+        try {
+            this.groundMount = MountType.valueOf((String) map.getOrDefault("ground-mount", "CROISSANT"));
+        } catch (IllegalArgumentException e) {
+            this.groundMount = MountType.CROISSANT;
+        }
+
+        try {
+            this.waterMount = MountType.valueOf((String) map.getOrDefault("water-mount", "ZOEY"));
+        } catch (IllegalArgumentException e) {
+            this.waterMount = MountType.ZOEY;
+        }
     }
 
     public MountType getWaterMount() {

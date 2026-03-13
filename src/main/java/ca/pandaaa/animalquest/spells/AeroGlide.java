@@ -10,7 +10,7 @@ public class AeroGlide extends Spell {
     public AeroGlide() {
         super("aero_glide", "Aero Glide", 25, 45,
                 "Harness the wind to glide through the air. Grants slow falling and a temporary jump boost.",
-                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY0NThhYjU0Y2EyZTFjOTU3OTc3NmMwZjM0ODZjY2I2N2RlMzdmYTg4ZDM4YWFhZGEzMWRmNjVlZTM1NmIifX19");
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTI5YWQ3NmMyNDU5OTExYzJiYmFjZGNkMGE3YjgyZTA4MzU1NjdlM2U1MTM0YjA1YTZmNWFmNjY5ZGQ4OGI4MyJ9fX0=");
     }
 
     @Override

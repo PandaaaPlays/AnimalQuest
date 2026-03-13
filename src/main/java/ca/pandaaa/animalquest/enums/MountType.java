@@ -5,13 +5,17 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 
 public enum MountType {
-    A(EntityType.HORSE, false, 1, 0.225, 0.7, null, Horse.Color.WHITE, Horse.Style.NONE, 60),
-    B(EntityType.HORSE, false, 2, 0.26, 0.8, Material.IRON_HORSE_ARMOR, Horse.Color.CHESTNUT, Horse.Style.NONE, 45),
-    C(EntityType.HORSE, false, 3, 0.3, 0.9, Material.GOLDEN_HORSE_ARMOR, Horse.Color.BLACK, Horse.Style.WHITE_DOTS, 30),
-    D(EntityType.HORSE, false, 4, 0.35, 1.0, Material.DIAMOND_HORSE_ARMOR, Horse.Color.GRAY, Horse.Style.BLACK_DOTS,
+    CROISSANT(EntityType.HORSE, false, 1, 0.225, 0.7, null, Horse.Color.WHITE, Horse.Style.NONE, 60),
+    SUSHI(EntityType.HORSE, false, 2, 0.26, 0.8, Material.IRON_HORSE_ARMOR, Horse.Color.BLACK, Horse.Style.WHITEFIELD,
+            45),
+    HOT_DOG(EntityType.HORSE, false, 3, 0.3, 0.9, Material.GOLDEN_HORSE_ARMOR, Horse.Color.CREAMY,
+            Horse.Style.BLACK_DOTS, 30),
+    SOUP(EntityType.HORSE, false, 4, 0.35, 1.0, Material.DIAMOND_HORSE_ARMOR, Horse.Color.DARK_BROWN, Horse.Style.NONE,
             15),
-    X(EntityType.NAUTILUS, true, 1, 0.2, 0.0, null, null, null, 60),
-    Y(EntityType.ZOMBIE_NAUTILUS, true, 2, 0.3, 0.0, null, null, null, 30);
+    APPLE_PIE(EntityType.HORSE, false, 5, 0.4, 1.1, Material.NETHERITE_HORSE_ARMOR, Horse.Color.CHESTNUT,
+            Horse.Style.WHITE, 10),
+    ZOEY(EntityType.NAUTILUS, true, 1, 0.2, 0.0, null, null, null, 60),
+    CORALINE(EntityType.ZOMBIE_NAUTILUS, true, 2, 0.3, 0.0, null, null, null, 30);
 
     private final EntityType type;
     private final boolean inWater;

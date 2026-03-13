@@ -28,8 +28,10 @@ commands:
   staffchat:
     aliases: [sc]
     description: StaffChat.
-  quest:
-    aliases: [q]
+  quests:
     description: Quest menu and commands.
   jobs:
     description: Jobs menu and commands.
+  worldreset:
+    aliases: [wr]
+    description: World reset system commands.

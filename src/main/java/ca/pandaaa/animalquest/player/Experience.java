@@ -31,9 +31,10 @@ public class Experience {
     }
 
     public void setExperience(double experience) {
+        double diff = experience - this.currentExperience;
         this.currentExperience = Math.max(0, experience);
         checkLevelUp();
-        callOnChange();
+        callOnChange(diff);
     }
 
     public void addExperience(double amount) {
@@ -41,14 +42,15 @@ public class Experience {
             return;
         this.currentExperience += amount;
         checkLevelUp();
-        callOnChange();
+        callOnChange(amount);
     }
 
     public void removeExperience(double amount) {
         if (amount <= 0)
             return;
+        double actualRemoved = Math.min(amount, this.currentExperience);
         this.currentExperience = Math.max(0, this.currentExperience - amount);
-        callOnChange();
+        callOnChange(-actualRemoved);
     }
 
     public int getLevel() {
@@ -58,21 +60,21 @@ public class Experience {
     public void setLevel(int level) {
         this.level = Math.max(1, level);
         checkLevelUp();
-        callOnChange();
+        callOnChange(0);
     }
 
     public void addLevel(int amount) {
         if (amount <= 0)
             return;
         this.level += amount;
-        callOnChange();
+        callOnChange(0);
     }
 
     public void removeLevel(int amount) {
         if (amount <= 0)
             return;
         this.level = Math.max(1, this.level - amount);
-        callOnChange();
+        callOnChange(0);
     }
 
     public String getLevelColor() {
@@ -112,11 +114,11 @@ public class Experience {
         }
     }
 
-    private void callOnChange() {
+    private void callOnChange(double added) {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             Bukkit.getPluginManager().callEvent(
-                    new PlayerExperienceChangeEvent(player, level, currentExperience));
+                    new PlayerExperienceChangeEvent(player, level, currentExperience, added));
         }
     }
 }

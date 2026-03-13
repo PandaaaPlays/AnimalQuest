@@ -9,7 +9,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.ChatColor;
 
 /**
  * Listens to player actions and updates quest progress
@@ -93,5 +95,15 @@ public class QuestListener implements Listener {
 
         plugin.getQuestManager().updateQuestProgress(player, QuestObjective.ObjectiveType.COLLECT_ITEM, itemType,
                 amount);
+    }
+
+    @EventHandler
+    public void onNPCInteract(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        if (event.getRightClicked().getCustomName() == null)
+            return;
+
+        String npcName = ChatColor.stripColor(event.getRightClicked().getCustomName());
+        plugin.getQuestManager().handleNPCTalk(player, npcName);
     }
 }

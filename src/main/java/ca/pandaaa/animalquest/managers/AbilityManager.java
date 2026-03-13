@@ -6,7 +6,7 @@ import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class AbilityManager implements Listener {
@@ -33,33 +34,45 @@ public class AbilityManager implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
         Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
+
+        // Check hand and armor for right-click abilities
+        for (ItemStack item : player.getInventory().getArmorContents()) {
+            if (item != null && item.getType() != Material.AIR) {
+                handleActiveAbility(player, item);
+            }
+        }
+        handleActiveAbility(player, player.getInventory().getItemInMainHand());
+    }
+
+    private void handleActiveAbility(Player player, ItemStack item) {
         if (item == null || item.getType() == Material.AIR)
             return;
-
         AbilityType ability = getAbilityFromItem(item);
         if (ability == null)
             return;
 
-        if (isCooldown(player, ability)) {
-            player.sendMessage(Utils.applyFormat("&c&l[!] &cAbility is on cooldown!"));
+        if (isCooldown(player, ability))
             return;
-        }
 
         switch (ability) {
             case DASH:
                 player.setVelocity(player.getLocation().getDirection().multiply(1.5).setY(0.2));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1, 1);
                 break;
-            case LEAP:
-                player.setVelocity(new Vector(0, 1.2, 0));
-                player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1, 1);
+            case FIRE_AURA:
+                player.getWorld().getNearbyEntities(player.getLocation(), 5, 5, 5).forEach(entity -> {
+                    if (entity instanceof LivingEntity living && !entity.equals(player)) {
+                        living.setFireTicks(100);
+                        living.damage(2, player);
+                    }
+                });
+                player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1, 1);
                 break;
             default:
-                break;
+                return;
         }
 
-        setCooldown(player, ability, 3000); // 3 seconds default
+        setCooldown(player, ability, 3000);
     }
 
     @EventHandler
@@ -67,8 +80,14 @@ public class AbilityManager implements Listener {
         if (!(event.getDamager() instanceof Player))
             return;
         Player player = (Player) event.getDamager();
-        ItemStack item = player.getInventory().getItemInMainHand();
 
+        // Check hand for on-hit abilities
+        handleHitAbility(event, player, player.getInventory().getItemInMainHand());
+    }
+
+    private void handleHitAbility(EntityDamageByEntityEvent event, Player player, ItemStack item) {
+        if (item == null || item.getType() == Material.AIR)
+            return;
         AbilityType ability = getAbilityFromItem(item);
         if (ability == null)
             return;
@@ -78,14 +97,22 @@ public class AbilityManager implements Listener {
                 event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
                 event.setDamage(event.getDamage() + 5);
                 break;
-            case HEALING_TOUCH:
-                player.setHealth(Math.min(player.getHealth() + 2,
-                    player.getAttribute(Attribute.MAX_HEALTH).getValue()));
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+            case LIFESTEAL:
+                double healAmount = event.getFinalDamage() * 0.05;
+                player.setHealth(Math.min(player.getHealth() + healAmount,
+                        player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue()));
+                player.playSound(player.getLocation(), Sound.ENTITY_PHANTOM_BITE, 0.5f, 1.5f);
+                break;
+            case EXPLOSIVE_HIT:
+                if (new Random().nextInt(100) < 15) { // 15% chance
+                    event.getEntity().getWorld().createExplosion(event.getEntity().getLocation(), 2.0f, false, false);
+                    event.setDamage(event.getDamage() + 10);
+                }
                 break;
             default:
                 break;
         }
+
     }
 
     private AbilityType getAbilityFromItem(ItemStack item) {

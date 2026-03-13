@@ -115,19 +115,23 @@ public enum AnimalQuestItem {
         DARK_REPULSOR(Material.NETHERITE_SWORD, "Dark Repulsor", ItemRarity.LEGENDARY,
                         new Attributes().enchant(Enchantment.UNBREAKING, 5).enchant(Enchantment.SMITE, 11)
                                         .enchant(Enchantment.SHARPNESS, 10)
-                                        .enchant(Enchantment.FIRE_ASPECT, 6).hideEnchants()),
+                                        .enchant(Enchantment.FIRE_ASPECT, 6).ability(AbilityType.DASH)
+                                        .hideEnchants()),
         ASHBRINGER(Material.NETHERITE_SWORD, "Ashbringer", ItemRarity.LEGENDARY,
                         new Attributes().enchant(Enchantment.UNBREAKING, 5).enchant(Enchantment.SMITE, 11)
                                         .enchant(Enchantment.SHARPNESS, 11)
-                                        .enchant(Enchantment.FIRE_ASPECT, 6).hideEnchants()),
+                                        .enchant(Enchantment.FIRE_ASPECT, 6).ability(AbilityType.FIRE_AURA)
+                                        .hideEnchants()),
         LUXURIA(Material.NETHERITE_SWORD, "Luxuria", ItemRarity.LEGENDARY,
                         new Attributes().enchant(Enchantment.UNBREAKING, 5).enchant(Enchantment.SMITE, 12)
                                         .enchant(Enchantment.SHARPNESS, 11)
-                                        .enchant(Enchantment.FIRE_ASPECT, 7).hideEnchants()),
+                                        .enchant(Enchantment.FIRE_ASPECT, 7).ability(AbilityType.LIFESTEAL)
+                                        .hideEnchants()),
         ASTRAL_BLADE(Material.NETHERITE_SWORD, "Astral Blade", ItemRarity.LEGENDARY,
                         new Attributes().enchant(Enchantment.UNBREAKING, 5).enchant(Enchantment.SMITE, 12)
                                         .enchant(Enchantment.SHARPNESS, 12)
-                                        .enchant(Enchantment.FIRE_ASPECT, 7).hideEnchants()),
+                                        .enchant(Enchantment.FIRE_ASPECT, 7).ability(AbilityType.EXPLOSIVE_HIT)
+                                        .hideEnchants()),
         TYRFING(Material.NETHERITE_SWORD, "Tyrfing", ItemRarity.MYTHICAL,
                         new Attributes().enchant(Enchantment.UNBREAKING, 6).enchant(Enchantment.SMITE, 13)
                                         .enchant(Enchantment.SHARPNESS, 13)
@@ -136,7 +140,7 @@ public enum AnimalQuestItem {
         KURIKARA(Material.NETHERITE_SWORD, "Kurikara", ItemRarity.MYTHICAL,
                         new Attributes().enchant(Enchantment.UNBREAKING, 7).enchant(Enchantment.SMITE, 14)
                                         .enchant(Enchantment.SHARPNESS, 14)
-                                        .enchant(Enchantment.FIRE_ASPECT, 7).ability(AbilityType.HEALING_TOUCH)
+                                        .enchant(Enchantment.FIRE_ASPECT, 7)// TODO
                                         .hideEnchants().unbreakable()),
 
         // Armor - Adventurer
@@ -239,26 +243,90 @@ public enum AnimalQuestItem {
 
         SAYNDALES(Material.GOLDEN_BOOTS, "Sayndales", ItemRarity.MYTHICAL,
                         new Attributes().enchant(Enchantment.PROTECTION, 6).enchant(Enchantment.FEATHER_FALLING, 4)
-                                        .enchant(Enchantment.UNBREAKING, 10).unbreakable().hideAttributes().speed(0.3)
-                                        .ability(AbilityType.DASH),
+                                        .enchant(Enchantment.UNBREAKING, 10).unbreakable().hideAttributes().speed(0.3),
                         "&9+0.3 Speed"),
+
+        // Magic
         MANA_BOTTLE(Material.EXPERIENCE_BOTTLE, "&5&lMana Bottle", ItemRarity.NONE, "&dRestores your mana!",
                         "&dUse to gain 40 mana points."),
         HEALING_POTION_L1(Material.POTION, "Healing Potion", ItemRarity.NONE, new Attributes().heal(0)),
         HEALING_POTION_L2(Material.POTION, "Healing Potion", ItemRarity.NONE, new Attributes().heal(1)),
+
+        // Fisherman
+        BASIC_FISHING_ROD(Material.FISHING_ROD, "Basic Fishing Rod", ItemRarity.COMMON),
+        APPRENTICE_FISHING_ROD(Material.FISHING_ROD, "Apprentice Fishing Rod", ItemRarity.COMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).enchant(Enchantment.LURE, 1)),
+        MASTER_FISHING_ROD(Material.FISHING_ROD, "Master Fishing Rod", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 2).enchant(Enchantment.LURE, 2)
+                                        .enchant(Enchantment.LUCK_OF_THE_SEA, 1)),
+        POSEIDON_FISHING_ROD(Material.FISHING_ROD, "Poseidon's Rod", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 3).enchant(Enchantment.LURE, 3)
+                                        .enchant(Enchantment.LUCK_OF_THE_SEA, 2)),
+        GREAT_SEA_FISHING_ROD(Material.FISHING_ROD, "Great Sea Hook", ItemRarity.EPIC,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 5).enchant(Enchantment.LURE, 5)
+                                        .enchant(Enchantment.LUCK_OF_THE_SEA, 5).unbreakable()),
+
+        HERBAL_BREW(Material.POTION, "Herbal Brew", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        RESISTANCE_ELIXIR(Material.POTION, "Resistance Elixir", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        REGENERATION_FLASK(Material.POTION, "Regeneration Flask", ItemRarity.EPIC,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+
+        // Butcher
+        STEAK(Material.COOKED_BEEF, "Steak", ItemRarity.COMMON),
+        CHICKEN(Material.COOKED_CHICKEN, "Chicken", ItemRarity.COMMON),
+        GOLDEN_CARROT(Material.GOLDEN_CARROT, "Golden carrot", ItemRarity.UNCOMMON),
+
+        // Bows
+        BOW(Material.BOW, "Novice Bow", ItemRarity.COMMON,
+                        new Attributes().enchant(Enchantment.POWER, 1)),
+        BOW_2(Material.BOW, "Apprentice Bow", ItemRarity.COMMON,
+                        new Attributes().enchant(Enchantment.POWER, 2).enchant(Enchantment.UNBREAKING, 1)),
+        BOW_3(Material.BOW, "Hunter Bow", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.POWER, 3).enchant(Enchantment.UNBREAKING, 2)),
+        BOW_4(Material.BOW, "Longbow", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.POWER, 4).enchant(Enchantment.UNBREAKING, 3)
+                                        .enchant(Enchantment.PUNCH, 1)),
+        BOW_5(Material.BOW, "Sharpshooter", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.POWER, 5).enchant(Enchantment.UNBREAKING, 3)
+                                        .enchant(Enchantment.PUNCH, 2)),
+        BOW_6(Material.BOW, "Recurve Bow", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.POWER, 6).enchant(Enchantment.UNBREAKING, 4)
+                                        .enchant(Enchantment.PUNCH, 2).enchant(Enchantment.FLAME, 1)),
+        BOW_7(Material.BOW, "Apollo's Bow", ItemRarity.EPIC,
+                        new Attributes().enchant(Enchantment.POWER, 7).enchant(Enchantment.UNBREAKING, 5)
+                                        .enchant(Enchantment.PUNCH, 2).enchant(Enchantment.FLAME, 1)
+                                        .enchant(Enchantment.INFINITY, 1)),
+        BOW_8(Material.BOW, "Dragon Bow", ItemRarity.LEGENDARY,
+                        new Attributes().enchant(Enchantment.POWER, 8).enchant(Enchantment.UNBREAKING, 6)
+                                        .enchant(Enchantment.PUNCH, 3).enchant(Enchantment.FLAME, 1)
+                                        .enchant(Enchantment.INFINITY, 1)),
+        BOW_9(Material.BOW, "Phoenix Bow", ItemRarity.MYTHICAL,
+                        new Attributes().enchant(Enchantment.POWER, 10).enchant(Enchantment.UNBREAKING, 10)
+                                        .enchant(Enchantment.PUNCH, 5).enchant(Enchantment.FLAME, 1)
+                                        .enchant(Enchantment.INFINITY, 1).unbreakable().hideEnchants()),
         ARROW(Material.ARROW, "Arrow", ItemRarity.NONE),
 
-        EXPLORER_SWORD(Material.STONE_SWORD, "Explorer Sword", ItemRarity.COMMON),
-        EXPLORER_HELMET(Material.LEATHER_HELMET, "Explorer Helmet", ItemRarity.COMMON),
-        EXPLORER_CHESTPLATE(Material.LEATHER_CHESTPLATE, "Explorer Chestplate", ItemRarity.COMMON),
-        EXPLORER_LEGGINGS(Material.LEATHER_LEGGINGS, "Explorer Leggings", ItemRarity.COMMON),
-        EXPLORER_BOOTS(Material.LEATHER_BOOTS, "Explorer Boots", ItemRarity.COMMON),
-
-        GUIDE_SWORD(Material.STONE_SWORD, "Guide Sword", ItemRarity.COMMON),
-        GUIDE_HELMET(Material.LEATHER_HELMET, "Guide Helmet", ItemRarity.COMMON),
-        GUIDE_CHESTPLATE(Material.LEATHER_CHESTPLATE, "Guide Chestplate", ItemRarity.COMMON),
-        GUIDE_LEGGINGS(Material.LEATHER_LEGGINGS, "Guide Leggings", ItemRarity.COMMON),
-        GUIDE_BOOTS(Material.LEATHER_BOOTS, "Guide Boots", ItemRarity.COMMON);
+        // Others
+        WILD_ESSENCE(Material.GLOWSTONE_DUST, "Wild Essence", ItemRarity.COMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        ANCIENT_RUNE(Material.AMETHYST_SHARD, "Ancient Rune", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        SUNSTONE(Material.RAW_GOLD, "Sunstone", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        SAPHIRE(Material.LAPIS_LAZULI, "Saphire", ItemRarity.UNCOMMON,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        ABYSSAL_CRYSTAL(Material.PRISMARINE_CRYSTALS, "Abyssal Crystal", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        MYSTIC_DIAMOND(Material.DIAMOND, "Mystic Diamond", ItemRarity.RARE,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        VOID_CORE(Material.ECHO_SHARD, "Void Core", ItemRarity.EPIC,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        CELESTIAL_SHARD(Material.HEART_OF_THE_SEA, "Celestial Shard", ItemRarity.LEGENDARY,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants()),
+        ETERNAL_EMBLEM(Material.NETHER_STAR, "Eternal Emblem", ItemRarity.MYTHICAL,
+                        new Attributes().enchant(Enchantment.UNBREAKING, 1).hideEnchants());
 
         private final Material material;
         private final String name;

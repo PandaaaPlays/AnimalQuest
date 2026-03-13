@@ -1,7 +1,5 @@
 package ca.pandaaa.animalquest.managers;
 
-import ca.pandaaa.animalquest.player.PlayerData;
-import ca.pandaaa.animalquest.spells.*;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.entity.Player;
 
@@ -19,8 +17,9 @@ public class HomeManager {
 
     public void teleportToHome(Player player) {
         long remaining = getRemainingCooldown(player);
-        if(remaining > 0) {
+        if (remaining > 0) {
             player.sendMessage(Utils.applyFormat("&c&l[!] &cTeleportation on cooldown! (" + remaining + "s)"));
+            return;
         }
 
         cooldown.put(player.getUniqueId(), System.currentTimeMillis());
@@ -29,7 +28,7 @@ public class HomeManager {
 
     public long getRemainingCooldown(Player player) {
         Long playerCooldown = cooldown.get(player.getUniqueId());
-        if(playerCooldown == null)
+        if (playerCooldown == null)
             return 0;
         long timeSinceCast = System.currentTimeMillis() - playerCooldown;
         long cooldownMillis = 5 * 60 * 1000L; // 5 Minutes

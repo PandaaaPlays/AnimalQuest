@@ -33,12 +33,10 @@ public class MenuGUI extends AnimalQuestGUI implements EventListener {
     }
 
     public void openInventory(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 27, TITLE);
+        inventory.setItem(SLOT_PLAYER_STATISTICS_ITEM, menuPlayerStatisticsItem(player));
+        inventory.setItem(SLOT_TELEPORTATION_ITEM, menuTeleportationItem(player));
 
-        inv.setItem(SLOT_PLAYER_STATISTICS_ITEM, menuPlayerStatisticsItem(player));
-        inv.setItem(SLOT_TELEPORTATION_ITEM, menuTeleportationItem(player));
-
-        player.openInventory(inv);
+        player.openInventory(inventory);
     }
 
     private ItemStack menuPlayerStatisticsItem(Player player) {
@@ -82,8 +80,11 @@ public class MenuGUI extends AnimalQuestGUI implements EventListener {
         assert meta != null;
         meta.setDisplayName(Utils.applyFormat("&b&lMagic stone"));
         List<String> lore = new ArrayList<>();
-        lore.add(Utils.applyFormat("&3&lCurrent home: &f" + playerData.getHome()));
-        lore.add(Utils.applyFormat("&fClick on a home NPC to change your spawnpoint."));
+        String homeName = playerData.getHomeName();
+        if (homeName == null || homeName.isEmpty())
+            homeName = "None";
+        lore.add(Utils.applyFormat("&3&lCurrent home&3: &f" + Utils.getSentenceCase(homeName)));
+        lore.add(Utils.applyFormat("&b&l⁎ &fClick on a home NPC to change your spawnpoint."));
         lore.add("");
         lore.add(Utils.applyFormat("&7&o(( Click to teleport back to your home ))"));
         meta.setLore(lore);
@@ -104,6 +105,11 @@ public class MenuGUI extends AnimalQuestGUI implements EventListener {
         if (event.getClickedInventory() == null || event.getClickedInventory().getType() == InventoryType.PLAYER) {
             event.setCancelled(event.isShiftClick());
             return;
+        }
+
+        Player player = (Player) event.getWhoClicked();
+        if (event.getSlot() == SLOT_TELEPORTATION_ITEM) {
+            AnimalQuest.getPlugin().getHomeManager().teleportToHome(player);
         }
 
         event.setCancelled(true);

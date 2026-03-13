@@ -1,6 +1,7 @@
 package ca.pandaaa.animalquest.guis;
 
 import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.utils.CustomHead;
 import ca.pandaaa.animalquest.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -21,7 +22,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class AnimalQuestGUI implements Listener {
-    protected final Inventory inventory;
+    protected Inventory inventory;
 
     public AnimalQuestGUI(int size, String title) {
         title = Utils.applyFormat(title);
@@ -91,5 +92,26 @@ public class AnimalQuestGUI implements Listener {
             fillerItemMeta.setDisplayName(" ");
         filler.setItemMeta(fillerItemMeta);
         return getMenuItem(filler, true);
+    }
+
+    protected ItemStack createItem(Material material, String name, List<String> lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(Utils.applyFormat(name));
+            if (lore != null && !lore.isEmpty()) {
+                meta.setLore(Utils.applyFormat(lore));
+            }
+            item.setItemMeta(meta);
+        }
+        return getMenuItem(item, true);
+    }
+
+    protected static ItemStack getPreviousItem() {
+        ItemStack item = CustomHead.createHead("a2f0425d64fdc8992928d608109810c1251fe243d60d175bed427c651cbe");
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(Utils.applyFormat("&e&lPrevious"));
+        item.setItemMeta(itemMeta);
+        return getMenuItem(item, true);
     }
 }

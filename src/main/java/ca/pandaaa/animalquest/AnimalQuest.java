@@ -6,6 +6,7 @@ import ca.pandaaa.animalquest.listeners.PlayerConnectionListener;
 import ca.pandaaa.animalquest.listeners.PlayerGameplayListener;
 import ca.pandaaa.animalquest.listeners.PlayerProtectionListener;
 import ca.pandaaa.animalquest.listeners.QuestListener;
+import ca.pandaaa.animalquest.listeners.BackupWorldListener;
 import ca.pandaaa.animalquest.player.Mount;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.quests.QuestProgress;
@@ -33,18 +34,20 @@ public final class AnimalQuest extends JavaPlugin {
     private HomeManager homeManager;
     private MountManager mountManager;
     private ZoneManager zoneManager;
+    private WorldResetManager worldResetManager;
+    private NPCManager npcManager;
 
     @Override
     public void onEnable() {
         plugin = this;
         RegisterSerializers();
 
+        // World Reset
+        worldResetManager = new WorldResetManager(this);
+
         // Staff
         staffManager = new StaffManager();
         vanishManager = new VanishManager(this);
-
-        // Shops
-        shopManager = new ShopManager(this);
 
         // Experience / Level
         experienceManager = new ExperienceManager();
@@ -66,6 +69,9 @@ public final class AnimalQuest extends JavaPlugin {
         // Spells
         spellManager = new SpellManager(playerDataManager);
 
+        // Shops
+        shopManager = new ShopManager(this);
+
         // Home
         homeManager = new HomeManager(playerDataManager);
 
@@ -78,6 +84,9 @@ public final class AnimalQuest extends JavaPlugin {
         // Zones
         zoneManager = new ZoneManager(this);
 
+        // NPCs
+        npcManager = new NPCManager(this);
+
         RegisterEvents();
         RegisterCommands();
 
@@ -85,6 +94,8 @@ public final class AnimalQuest extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (worldResetManager != null)
+            worldResetManager.shutdown();
         playerDataManager.shutdown();
     }
 
@@ -144,6 +155,14 @@ public final class AnimalQuest extends JavaPlugin {
         return zoneManager;
     }
 
+    public WorldResetManager getWorldResetManager() {
+        return worldResetManager;
+    }
+
+    public NPCManager getNpcManager() {
+        return npcManager;
+    }
+
     private void RegisterSerializers() {
         ConfigurationSerialization.registerClass(PlayerData.class);
         ConfigurationSerialization.registerClass(Mount.class);
@@ -161,6 +180,7 @@ public final class AnimalQuest extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new SpellListener(spellManager), this);
         Bukkit.getPluginManager().registerEvents(new QuestListener(this), this);
         Bukkit.getPluginManager().registerEvents(new JobListener(playerDataManager), this);
+        Bukkit.getPluginManager().registerEvents(new BackupWorldListener(), this);
     }
 
     private void RegisterCommands() {
@@ -216,7 +236,7 @@ public final class AnimalQuest extends JavaPlugin {
             staffChatCommand.setExecutor(new StaffChatCommand());
         }
 
-        PluginCommand questCommand = getCommand("quest");
+        PluginCommand questCommand = getCommand("quests");
         if (questCommand != null) {
             QuestCommand questExecutor = new QuestCommand();
             questCommand.setExecutor(questExecutor);
@@ -226,6 +246,13 @@ public final class AnimalQuest extends JavaPlugin {
         PluginCommand menuCommand = getCommand("menu");
         if (menuCommand != null) {
             menuCommand.setExecutor(new MenuCommand());
+        }
+
+        PluginCommand worldResetCommand = getCommand("worldreset");
+        if (worldResetCommand != null) {
+            WorldResetCommand worldResetExecutor = new WorldResetCommand();
+            worldResetCommand.setExecutor(worldResetExecutor);
+            worldResetCommand.setTabCompleter(worldResetExecutor);
         }
     }
 }

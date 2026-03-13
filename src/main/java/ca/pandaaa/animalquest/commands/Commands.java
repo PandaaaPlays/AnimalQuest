@@ -2,6 +2,7 @@ package ca.pandaaa.animalquest.commands;
 
 import ca.pandaaa.animalquest.utils.Utils;
 import ca.pandaaa.animalquest.commands.subcommands.*;
+import ca.pandaaa.animalquest.commands.subcommands.ResetNpcsSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +22,9 @@ public class Commands implements CommandExecutor, TabCompleter {
         registerSubCommand(new SpellSubCommand());
         registerSubCommand(new ShopSubCommand());
         registerSubCommand(new BalanceSubCommand());
+        registerSubCommand(new ResetNpcsSubCommand());
+        registerSubCommand(new SetHomeSubCommand());
+        registerSubCommand(new BuyMountSubCommand());
     }
 
     @Override
