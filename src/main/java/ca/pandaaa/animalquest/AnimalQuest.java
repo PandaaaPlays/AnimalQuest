@@ -12,6 +12,7 @@ import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.quests.QuestProgress;
 import ca.pandaaa.animalquest.spells.*;
 import ca.pandaaa.animalquest.listeners.ChatListener;
+import ca.pandaaa.animalquest.listeners.CustomMobListener;
 import ca.pandaaa.animalquest.listeners.JobListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -36,6 +37,9 @@ public final class AnimalQuest extends JavaPlugin {
     private ZoneManager zoneManager;
     private WorldResetManager worldResetManager;
     private NPCManager npcManager;
+    private CustomMobManager customMobManager;
+    private BlockRegenManager blockRegenManager;
+    private ActionBarManager actionBarManager;
 
     @Override
     public void onEnable() {
@@ -53,14 +57,17 @@ public final class AnimalQuest extends JavaPlugin {
         experienceManager = new ExperienceManager();
         experienceManager.loadConfig(this);
 
-        // Player
-        playerDataManager = new PlayerDataManager(this);
-        scoreboardManager = new ScoreboardManager(this, playerDataManager);
-        playerDataManager.initialize();
+        // Action Bar
+        actionBarManager = new ActionBarManager(this);
 
         // Jobs
         jobsManager = new JobsManager(this);
         guildManager = new GuildManager(this);
+
+        // Player
+        playerDataManager = new PlayerDataManager(this);
+        scoreboardManager = new ScoreboardManager(this, playerDataManager);
+        playerDataManager.initialize();
 
         // Quests
         questManager = new QuestManager(this);
@@ -87,6 +94,12 @@ public final class AnimalQuest extends JavaPlugin {
         // NPCs
         npcManager = new NPCManager(this);
 
+        // Custom Mobs
+        customMobManager = new CustomMobManager(this);
+
+        // Block Regen
+        blockRegenManager = new BlockRegenManager(this);
+
         RegisterEvents();
         RegisterCommands();
 
@@ -96,6 +109,8 @@ public final class AnimalQuest extends JavaPlugin {
     public void onDisable() {
         if (worldResetManager != null)
             worldResetManager.shutdown();
+        if (blockRegenManager != null)
+            blockRegenManager.restoreAll();
         playerDataManager.shutdown();
     }
 
@@ -163,6 +178,18 @@ public final class AnimalQuest extends JavaPlugin {
         return npcManager;
     }
 
+    public CustomMobManager getCustomMobManager() {
+        return customMobManager;
+    }
+
+    public BlockRegenManager getBlockRegenManager() {
+        return blockRegenManager;
+    }
+
+    public ActionBarManager getActionBarManager() {
+        return actionBarManager;
+    }
+
     private void RegisterSerializers() {
         ConfigurationSerialization.registerClass(PlayerData.class);
         ConfigurationSerialization.registerClass(Mount.class);
@@ -181,6 +208,7 @@ public final class AnimalQuest extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new QuestListener(this), this);
         Bukkit.getPluginManager().registerEvents(new JobListener(playerDataManager), this);
         Bukkit.getPluginManager().registerEvents(new BackupWorldListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CustomMobListener(this), this);
     }
 
     private void RegisterCommands() {

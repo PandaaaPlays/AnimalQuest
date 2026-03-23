@@ -46,6 +46,7 @@ public class QuestReward {
         // Give experience
         if (experience > 0) {
             data.getExperience().addExperience(experience);
+            AnimalQuest.getPlugin().getActionBarManager().sendPriorityMessage(player, "&a&l+ " + experience + " xp (Quest)", 3);
             player.sendMessage("§a+ " + experience + " Experience");
         }
 

@@ -32,11 +32,12 @@ npcs:
   shop_mount:
     type: SHOP
     subtype: mount
+    name: "&6&lMount Shop"
     profession: 
     location: world;-75.5;26;0.5;90;0
-  shop_minerals:
+  shop_tools:
     type: SHOP
-    subtype: minerals
+    subtype: tools
     profession: MASON
     location: world;22.5;28;-8.5;90;0
   shop_spells:
@@ -53,11 +54,11 @@ npcs:
     type: SHOP
     subtype: butcher
     profession: BUTCHER
-    location: world;-17.5;26;-4.5;0;0
-  repair_sword:
+    location: world;-47.5;26;18.5;180;0
+  repair_tool:
     type: REPAIR
-    subtype: sword
-    name: "&8&lBlacksmith"
+    subtype: tool
+    name: "&8&lToolsmith"
     profession: TOOLSMITH
     location: world;32.5;29;-10.5;0;0
   repair_armor:
@@ -115,3 +116,17 @@ npcs:
     entity_type: ZOMBIE_NAUTILUS
     immobile: false
     location: world;-73.5;26;16.5;0;0
+  sell_lumberjack:
+    type: SELL
+    subtype: LUMBERJACK
+    name: "&2&lLumber Merchant"
+    profession: SHEPHERD
+    villager_type: JUNGLE
+    location: world;-17.5;26;-4.5;0;0
+  sell_miner:
+    type: SELL
+    subtype: MINER
+    name: "&3&lMineral Merchant"
+    profession: MASON
+    villager_type: TAIGA
+    location: world;-25.5;26;-4.5;0;0

@@ -13,6 +13,7 @@ public class GuildManager {
     private final AnimalQuest plugin;
     private final Map<String, Guild> guilds = new HashMap<>();
     private final Map<UUID, String> playerGuild = new HashMap<>();
+    private final Map<UUID, String> guildInvites = new HashMap<>();
     private final File guildFile;
     private FileConfiguration guildConfig;
 
@@ -81,8 +82,24 @@ public class GuildManager {
         if (guild != null) {
             guild.addMember(uuid);
             playerGuild.put(uuid, guildName.toLowerCase());
+            guildInvites.remove(uuid);
             saveGuilds();
         }
+    }
+
+    public void invitePlayer(UUID inviterUuid, UUID targetUuid) {
+        Guild guild = getPlayerGuild(inviterUuid);
+        if (guild != null) {
+            guildInvites.put(targetUuid, guild.getName().toLowerCase());
+        }
+    }
+
+    public String getInvite(UUID uuid) {
+        return guildInvites.get(uuid);
+    }
+
+    public void removeInvite(UUID uuid) {
+        guildInvites.remove(uuid);
     }
 
     public void leaveGuild(UUID uuid) {

@@ -36,6 +36,8 @@ public class PlayerConnectionListener implements Listener {
         }
 
         data.applyHealthAptitude();
+        data.applyExplorerSpeed();
+        data.applyExplorerManaBonus();
 
         Bukkit.getScheduler().runTaskLater(AnimalQuest.getPlugin(), () -> {
             if (player.isOnline()) {

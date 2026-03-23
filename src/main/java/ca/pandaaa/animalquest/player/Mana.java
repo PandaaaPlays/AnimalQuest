@@ -11,6 +11,7 @@ public class Mana {
     private int currentMana;
     private final Aptitudes aptitudes;
     private final UUID uuid;
+    private int bonusMaxMana = 0;
 
     public Mana(Aptitudes aptitudes, UUID uuid) {
         this.aptitudes = aptitudes;
@@ -28,9 +29,18 @@ public class Mana {
         return currentMana;
     }
 
+    public int getMaxMana() {
+        int base = aptitudes.getMana() * Aptitudes.MANA_MULTIPLIER;
+        return Math.max(1, base + bonusMaxMana);
+    }
+
+    public void setBonusMaxMana(int bonus) {
+        this.bonusMaxMana = bonus;
+    }
+
     public void setCurrentMana(int mana) {
         int oldMana = this.currentMana;
-        this.currentMana = Math.max(0, Math.min(mana, aptitudes.getMana() * 8));
+        this.currentMana = Math.max(0, Math.min(mana, getMaxMana()));
 
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {

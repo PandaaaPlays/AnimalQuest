@@ -12,6 +12,30 @@ zones:
     recommended-level: 0
     biomes:
       - "FLOWER_FOREST"
+    minable-blocks:
+      OAK_WOOD: 600
+      SPRUCE_STAIRS: 600
+      SPRUCE_SLAB: 600
+      SPRUCE_FENCE: 600
+
+  quarry:
+    name: "&8&lQuarry"
+    subtitle: "&7Mining Grounds"
+    recommended-level: 0
+    coordinates:
+      world: "world"
+      min:
+        x: 469
+        y: 68
+        z: -93
+      max:
+        x: 534
+        y: -5
+        z: -160
+    minable-blocks:
+      COBBLESTONE: 300
+      COAL_ORE: 600
+      DIORITE: 600
 
   enchanted_lands:
     name: "&d&lEnchanted Lands"
@@ -19,20 +43,53 @@ zones:
     biomes:
       - "JUNGLE"
 
+  harbor_city:
+    name: "&3&lHarbor City"
+    subtitle: "&7The City of Trade"
+    recommended-level: 15
+    coordinates:
+      world: "world"
+      min:
+        x: -237
+        y: 119
+        z: -281
+      max:
+        x: -473
+        y: 19
+        z: -473
+
   canyon:
     name: "&6&lCanyon"
     recommended-level: 30
     biomes:
       - "BADLANDS"
+    minable-blocks:
+      DARK_OAK_WOOD: 600
+      DARK_OAK_STAIRS: 600
+      DARK_OAK_SLAB: 600
+      DARK_OAK_FENCE: 600
+      CACTUS: 600
+      CACTUS_FLOWER: 600
 
   sunscar_ravine:
     name: "&e&lSunscar Ravine"
     recommended-level: 50
     biomes:
       - "PLAINS"
+    minable-blocks:
+      BIRCH_WOOD: 600
+      BIRCH_STAIRS: 600
+      BIRCH_SLAB: 600
+      BIRCH_FENCE: 600
 
   volcanic_lands:
     name: "&4&lVolcanic Lands"
     recommended-level: 75
     biomes:
       - "BASALT_DELTAS"
+    minable-blocks:
+      PALE_OAK_WOOD: 600
+      PALE_OAK_STAIRS: 600
+      PALE_OAK_SLAB: 600
+      PALE_OAK_FENCE: 600
+      

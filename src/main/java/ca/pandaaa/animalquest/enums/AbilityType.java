@@ -5,7 +5,8 @@ public enum AbilityType {
     LIGHTNING_STRIKE("&e&lLIGHTNING STRIKE", "&7Strikes lightning on hit."),
     LIFESTEAL("&4&lLIFESTEAL", "&7Steals health from your enemies."),
     FIRE_AURA("&6&lFIRE AURA", "&7Sets nearby enemies on fire."),
-    EXPLOSIVE_HIT("&c&lEXPLOSIVE HIT", "&7Chance to cause an explosion on hit.");
+    EXPLOSIVE_HIT("&c&lEXPLOSIVE HIT", "&7Chance to cause an explosion on hit."),
+    BLUE_FLAME_STRIKE("&1&lBLUE FLAMES", "&7Summon the power of blue flames.");
 
     private final String displayName;
     private final String description;

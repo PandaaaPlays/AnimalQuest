@@ -1,0 +1,66 @@
+mobs:
+  # --- Level 1 ---
+  forestchicken:
+    experience: 5
+  forestpig:
+    experience: 5
+  forestturtle:
+    experience: 10 # Slighly more because it's "Angry"
+    
+  # --- Level 2 ---
+  rivercod:
+    experience: 10
+  riversalmon:
+    experience: 10
+    
+  # --- Level 3 ---
+  forestwolf:
+    experience: 20
+    
+  # --- Level 5 ---
+  riveraxolotl:
+    experience: 25
+  riversquid:
+    experience: 15
+    
+  # --- Level 10 ---
+  canyonarmadillo:
+    experience: 15
+  canyonllama:
+    experience: 15
+    
+  # --- Level 10 (Enchanted) ---
+  enchantbee:
+    experience: 15
+  enchantdonkey:
+    experience: 15
+  enchantfrog:
+    experience: 15
+  enchanthorse:
+    experience: 15
+  enchantrabbit:
+    experience: 15
+  enchantsheep:
+    experience: 15
+    
+  # --- Level 25 ---
+  ravinegoat:
+    experience: 65
+  snowyhoglin:
+    experience: 65
+    
+  # --- Level 30 ---
+  ravinesheep:
+    experience: 100
+  snowyfox:
+    experience: 100
+    
+  # --- Level 35 ---
+  snowybat:
+    experience: 100
+  snowyspider:
+    experience: 100
+    
+  # --- Level 50 ---
+  volcanicgoat:
+    experience: 150

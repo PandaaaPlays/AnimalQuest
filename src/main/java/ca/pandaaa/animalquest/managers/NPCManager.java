@@ -2,30 +2,38 @@ package ca.pandaaa.animalquest.managers;
 
 import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.player.PlayerData;
+import ca.pandaaa.animalquest.shop.Shop;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class NPCManager implements Listener {
     private final AnimalQuest plugin;
     private final NamespacedKey npcTypeKey;
     private final NamespacedKey npcSubtypeKey;
 
-    private final java.util.Map<java.util.UUID, String> pendingHomes = new java.util.HashMap<>();
-    private final java.util.Map<java.util.UUID, String> pendingMounts = new java.util.HashMap<>();
+    private final Map<UUID, String> pendingHomes = new HashMap<>();
+    private final Map<UUID, String> pendingMounts = new HashMap<>();
 
     private File file;
     private FileConfiguration config;
@@ -123,7 +131,7 @@ public class NPCManager implements Listener {
         if (name != null) {
             displayName = name;
         } else if (type.equalsIgnoreCase("SHOP")) {
-            ca.pandaaa.animalquest.shop.Shop shop = plugin.getShopManager().getShop(subtype);
+            Shop shop = plugin.getShopManager().getShop(subtype);
             if (shop != null) {
                 displayName = shop.getName();
             }
@@ -240,6 +248,9 @@ public class NPCManager implements Listener {
 
     @EventHandler
     public void onNpcClick(PlayerInteractEntityEvent event) {
+        if (event.getHand().equals(EquipmentSlot.OFF_HAND))
+            return;
+
         Entity entity = event.getRightClicked();
         if (!entity.getPersistentDataContainer().has(npcTypeKey, PersistentDataType.STRING))
             return;
@@ -303,6 +314,8 @@ public class NPCManager implements Listener {
             }
         } else if (type.equalsIgnoreCase("REPAIR")) {
             repairItem(event.getPlayer(), subtype);
+        } else if (type.equalsIgnoreCase("SELL")) {
+            sellItems(event.getPlayer(), subtype);
         }
     }
 
@@ -318,24 +331,27 @@ public class NPCManager implements Listener {
         if (data == null)
             return;
 
-        if (type.equalsIgnoreCase("sword")) {
+        if (type.equalsIgnoreCase("tool")) {
             org.bukkit.inventory.ItemStack item = player.getInventory().getItemInMainHand();
-            if (item == null || item.getType() == org.bukkit.Material.AIR || !item.getType().name().contains("SWORD")) {
-                player.sendMessage(Utils.applyFormat("&c&l[!] &cYou must hold a sword to repair it!"));
+            boolean isTool = item != null && (item.getType().name().contains("SWORD")
+                    || item.getType().name().contains("AXE") || item.getType().name().contains("PICKAXE")
+                    || item.getType() == Material.FISHING_ROD);
+            if (!isTool) {
+                player.sendMessage(Utils.applyFormat("&c&l[!] &cYou must hold a tool to repair it!"));
                 return;
             }
 
             if (item.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable) {
                 org.bukkit.inventory.meta.Damageable meta = (org.bukkit.inventory.meta.Damageable) item.getItemMeta();
                 if (meta.getDamage() == 0) {
-                    player.sendMessage(Utils.applyFormat("&c&l[!] &cThis sword is not damaged!"));
+                    player.sendMessage(Utils.applyFormat("&c&l[!] &cThis tool is not damaged!"));
                     return;
                 }
 
                 double price = 150.0;
                 if (data.getBalance() < price) {
                     player.sendMessage(
-                            Utils.applyFormat("&c&l[!] &cYou need " + price + " coins to repair your sword!"));
+                            Utils.applyFormat("&c&l[!] &cYou need " + price + " coins to repair your tool!"));
                     return;
                 }
 
@@ -344,7 +360,7 @@ public class NPCManager implements Listener {
                 item.setItemMeta(meta);
                 player.sendMessage(
                         Utils.applyFormat(Utils.getAnimalQuestName()
-                                + " &7&l>> &bYour sword has been fully repaired for &3" + price + "&b coins!"));
+                                + " &7&l>> &bYour tool has been fully repaired for &3" + price + "&b coins!"));
             }
         } else if (type.equalsIgnoreCase("armor")) {
             org.bukkit.inventory.ItemStack[] armor = player.getInventory().getArmorContents();
@@ -389,5 +405,64 @@ public class NPCManager implements Listener {
             player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName()
                     + " &7&l>> &bYour equipped armor has been fully repaired for &3" + price + "&b coins!"));
         }
+    }
+
+    private void sellItems(Player player, String jobType) {
+        PlayerData data = plugin.getPlayerDataManager().get(player.getUniqueId());
+        if (data == null)
+            return;
+
+        Map<Material, Double> prices = getSellPrices(jobType);
+        if (prices.isEmpty())
+            return;
+
+        double totalSold = 0;
+        int itemsCount = 0;
+
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item == null || item.getType() == Material.AIR)
+                continue;
+
+            Double unitPrice = prices.get(item.getType());
+            if (unitPrice != null) {
+                totalSold += unitPrice * item.getAmount();
+                itemsCount += item.getAmount();
+                player.getInventory().setItem(i, null);
+            }
+        }
+
+        if (totalSold > 0) {
+            data.setBalance(data.getBalance() + totalSold);
+            player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bYou sold &3" + itemsCount
+                    + " &bitems for &3$" + String.format("%.1f", totalSold) + "&b!"));
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+        } else {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cYou don't have any items to sell to this merchant!"));
+        }
+    }
+
+    private Map<Material, Double> getSellPrices(String jobType) {
+        Map<Material, Double> prices = new HashMap<>();
+        if (jobType.equalsIgnoreCase("MINER")) {
+            prices.put(Material.COBBLESTONE, 0.1);
+            prices.put(Material.COAL, 1.5);
+            prices.put(Material.RAW_IRON, 10.0); // Titanium
+            prices.put(Material.RAW_GOLD, 25.0); // Gold
+            prices.put(Material.DIAMOND, 100.0); // Diamond
+            prices.put(Material.ANCIENT_DEBRIS, 500.0); // Meteorite
+            prices.put(Material.CRYING_OBSIDIAN, 1000.0); // Draconium
+            prices.put(Material.GILDED_BLACKSTONE, 5000.0); // Ruinstone
+        } else if (jobType.equalsIgnoreCase("LUMBERJACK")) {
+            prices.put(Material.OAK_LOG, 2.5);
+            prices.put(Material.DARK_OAK_LOG, 5.0);
+            prices.put(Material.CACTUS, 10.0);
+            prices.put(Material.CACTUS_FLOWER, 25.0);
+            prices.put(Material.SPRUCE_LOG, 50.0);
+            prices.put(Material.BIRCH_LOG, 100.0);
+            prices.put(Material.PALE_OAK_LOG, 200.0);
+        }
+        return prices;
     }
 }

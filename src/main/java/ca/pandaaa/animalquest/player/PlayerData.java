@@ -28,6 +28,7 @@ public class PlayerData implements ConfigurationSerializable {
     private String home;
     private double balance;
     private boolean vanished;
+    private final Statistics statistics;
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
@@ -40,6 +41,7 @@ public class PlayerData implements ConfigurationSerializable {
         this.mounts = new Mount();
         this.balance = 0;
         this.vanished = false;
+        this.statistics = new Statistics();
         setupListeners();
     }
 
@@ -88,6 +90,14 @@ public class PlayerData implements ConfigurationSerializable {
         this.home = (String) map.getOrDefault("home", "");
         this.vanished = (boolean) map.getOrDefault("vanished", false);
 
+        if (map.get("statistics") instanceof Map statsMap) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> castStatsMap = (Map<String, Object>) statsMap;
+            this.statistics = new Statistics(castStatsMap);
+        } else {
+            this.statistics = new Statistics();
+        }
+
         setupListeners();
     }
 
@@ -99,7 +109,11 @@ public class PlayerData implements ConfigurationSerializable {
                 progress.setOnLevelUp(() -> {
                     org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(uuid);
                     if (p != null && p.isOnline()) {
-                        // jobsManager.onLevelUp(p, job, progress.getLevel());
+                        jobsManager.sendJobLevelUpMessage(p, job, progress.getLevel());
+                        if (job == Job.EXPLORER) {
+                            applyExplorerSpeed();
+                            applyExplorerManaBonus();
+                        }
                     }
                 });
             }
@@ -167,6 +181,10 @@ public class PlayerData implements ConfigurationSerializable {
         this.vanished = vanished;
     }
 
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
     public boolean consumeMana(int amount) {
         return mana.consumeMana(amount);
     }
@@ -182,11 +200,32 @@ public class PlayerData implements ConfigurationSerializable {
         }
     }
 
+    public void applyExplorerSpeed() {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null)
+            return;
+        AttributeInstance speedAttr = player.getAttribute(Attribute.MOVEMENT_SPEED);
+        if (speedAttr != null) {
+            int explorerLevel = jobs.getExplorer().getLevel();
+            // 0.5% increase per level (0.0005), 10% increase at level 20 (0.01)
+            double bonus = explorerLevel * 0.0005;
+            speedAttr.setBaseValue(0.1 + bonus);
+        }
+    }
+
+    public void applyExplorerManaBonus() {
+        int explorerLevel = jobs.getExplorer().getLevel();
+        // 5 mana per level, 100 mana at level 20
+        int bonus = explorerLevel * 5;
+        mana.setBonusMaxMana(bonus);
+        updateManaDisplay();
+    }
+
     public void updateManaDisplay() {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null || !player.isOnline())
             return;
-        float maxMana = aptitudes.getMana() != 0 ? aptitudes.getMana() * Aptitudes.MANA_MULTIPLIER : 1;
+        float maxMana = mana.getMaxMana();
         float progress = (float) (mana.getCurrentMana() / maxMana);
         player.setExp(Math.min(0.999f, progress));
         player.setLevel((int) mana.getCurrentMana());
@@ -214,6 +253,7 @@ public class PlayerData implements ConfigurationSerializable {
         map.put("home", home);
         map.put("mounts", mounts.serialize());
         map.put("vanished", vanished);
+        map.put("statistics", statistics.serialize());
         return map;
     }
 }

@@ -219,6 +219,8 @@ public class MountShopGUI extends AnimalQuestGUI {
 
         data.setBalance(data.getBalance() - price);
 
+        data.getStatistics().logPurchase("MOUNT_" + mount.name());
+
         Mount mounts = data.getMounts();
         if (mount.isInWater()) {
             mounts.setWaterMount(mount);

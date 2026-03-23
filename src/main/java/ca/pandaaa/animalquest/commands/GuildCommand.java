@@ -102,8 +102,34 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleInvite(Player player, String[] args) {
-        player.sendMessage(Utils
-                .applyFormat("&c&l[!] &cInvite system coming soon (currently direct invite via accept [guildname])."));
+        if (args.length < 2) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cUsage: /guild invite <player>"));
+            return;
+        }
+
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null || (!guild.getOwner().equals(player.getUniqueId())
+                && !guild.getOfficers().contains(player.getUniqueId()))) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cOnly officers or the owner can invite members."));
+            return;
+        }
+
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cPlayer not found."));
+            return;
+        }
+
+        if (guildManager.getPlayerGuild(target.getUniqueId()) != null) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cThat player is already in a guild."));
+            return;
+        }
+
+        guildManager.invitePlayer(player.getUniqueId(), target.getUniqueId());
+        player.sendMessage(Utils.applyFormat(
+                Utils.getAnimalQuestName() + " &7&l>> &bInvited &3" + target.getName() + " &bto the guild."));
+        target.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bYou have been invited to &3"
+                + guild.getName() + "&b. Type &3/guild accept " + guild.getName() + " &bto join."));
     }
 
     private void handleAccept(Player player, String[] args) {
@@ -115,8 +141,16 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(Utils.applyFormat("&c&l[!] &cYou are already in a guild."));
             return;
         }
-        guildManager.joinGuild(player.getUniqueId(), args[1]);
-        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bJoined guild " + args[1]));
+
+        String guildName = args[1];
+        String invite = guildManager.getInvite(player.getUniqueId());
+        if (invite == null || !invite.equalsIgnoreCase(guildName)) {
+            player.sendMessage(Utils.applyFormat("&c&l[!] &cYou do not have an invite for that guild."));
+            return;
+        }
+
+        guildManager.joinGuild(player.getUniqueId(), guildName);
+        player.sendMessage(Utils.applyFormat(Utils.getAnimalQuestName() + " &7&l>> &bJoined guild " + guildName));
     }
 
     private void handleLeave(Player player) {
@@ -152,6 +186,18 @@ public class GuildCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
             return Arrays.asList("create", "disband", "invite", "accept", "leave", "kick");
+        }
+        if (args.length == 2) {
+            String sub = args[0].toLowerCase();
+            if (sub.equals("invite") || sub.equals("kick")) {
+                return null; // Bukkit default player suggestions
+            }
+            if (sub.equals("accept")) {
+                if (sender instanceof Player player) {
+                    String invite = guildManager.getInvite(player.getUniqueId());
+                    return invite != null ? Collections.singletonList(invite) : Collections.emptyList();
+                }
+            }
         }
         return Collections.emptyList();
     }

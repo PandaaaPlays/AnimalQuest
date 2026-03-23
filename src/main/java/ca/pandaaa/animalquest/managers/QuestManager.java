@@ -306,16 +306,19 @@ public class QuestManager {
         QuestProgress trackedProgress = data.getQuests().getTrackedQuest();
 
         if (trackedProgress == null) {
+            plugin.getActionBarManager().setFallbackMessage(player, null);
             return;
         }
 
         Quest quest = getQuest(trackedProgress.getQuestId());
         if (quest == null) {
+            plugin.getActionBarManager().setFallbackMessage(player, null);
             return;
         }
 
         QuestStep currentStep = quest.getStep(trackedProgress.getCurrentStep());
         if (currentStep == null) {
+            plugin.getActionBarManager().setFallbackMessage(player, null);
             return;
         }
 
@@ -328,9 +331,9 @@ public class QuestManager {
                 "§7/§e" + quest.getTotalSteps() + "§8] " + (arrow.isEmpty() ? "" : arrow + " ") + "§f"
                 + currentStep.getDescription() + progressStr;
 
-        player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
-                new net.md_5.bungee.api.chat.TextComponent(message));
+        plugin.getActionBarManager().setFallbackMessage(player, message);
     }
+
 
     /**
      * Get an arrow pointing towards a location

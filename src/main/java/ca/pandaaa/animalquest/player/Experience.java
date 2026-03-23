@@ -111,6 +111,16 @@ public class Experience {
         while (getGoalExperience() != -1 && currentExperience >= getGoalExperience()) {
             currentExperience -= getGoalExperience();
             level++;
+
+            PlayerData data = AnimalQuest.getPlugin().getPlayerDataManager().get(uuid);
+            if (data != null) {
+                data.getStatistics().logLevelUp(level);
+
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null && player.isOnline()) {
+                    AnimalQuest.getPlugin().getExperienceManager().sendLevelUpMessage(player, level);
+                }
+            }
         }
     }
 

@@ -25,6 +25,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         registerSubCommand(new ResetNpcsSubCommand());
         registerSubCommand(new SetHomeSubCommand());
         registerSubCommand(new BuyMountSubCommand());
+        registerSubCommand(new GiveSubCommand());
     }
 
     @Override

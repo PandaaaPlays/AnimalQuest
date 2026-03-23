@@ -36,6 +36,12 @@
             <version>${used.spigot.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>ca.pandaaa</groupId>
+            <artifactId>CustomMobs</artifactId>
+            <version>1.7.3</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,5 +1,6 @@
 package ca.pandaaa.animalquest.listeners;
 
+import ca.pandaaa.animalquest.AnimalQuest;
 import ca.pandaaa.animalquest.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,11 +25,18 @@ public class PlayerProtectionListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
 
-        // TODO, allow breaking of certain blocks in certain zones
-        if (!player.hasPermission("animalquest.admin")) {
-            event.setCancelled(true);
-            player.sendMessage(Utils.applyFormat("&c&l[!] &cYou cannot break this block here!"));
+        Block block = event.getBlock();
+        Integer regenTime = AnimalQuest.getPlugin().getZoneManager().getRegenTime(block.getLocation(), block.getType());
+
+        if (regenTime != null) {
+            return;
         }
+
+        if (player.hasPermission("animalquest.admin"))
+            return;
+
+        event.setCancelled(true);
+        player.sendMessage(Utils.applyFormat("&c&l[!] &cYou cannot break this block here!"));
     }
 
     @EventHandler

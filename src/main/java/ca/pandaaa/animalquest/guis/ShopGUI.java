@@ -1,6 +1,7 @@
 package ca.pandaaa.animalquest.guis;
 
 import ca.pandaaa.animalquest.AnimalQuest;
+import ca.pandaaa.animalquest.enums.AnimalQuestItem;
 import ca.pandaaa.animalquest.player.PlayerData;
 import ca.pandaaa.animalquest.shop.Shop;
 import ca.pandaaa.animalquest.shop.ShopItem;
@@ -48,6 +49,12 @@ public class ShopGUI extends AnimalQuestGUI {
         for (ShopItem shopItem : shop.getItems()) {
             if (slot >= inventory.getSize())
                 break;
+
+            if (shopItem == null) {
+                inventory.setItem(slot, getFillerItem());
+                slot++;
+                continue;
+            }
 
             ItemStack displayItem = shopItem.getItemStack();
             ItemMeta meta = displayItem.getItemMeta();
@@ -143,6 +150,9 @@ public class ShopGUI extends AnimalQuestGUI {
         }
 
         ItemStack purchasedStack = shopItem.getItemStack();
+        String purchaseId = shopItem.getItem() != null ? shopItem.getItem().name() : purchasedStack.getType().name();
+        data.getStatistics().logPurchase(purchaseId);
+
         player.getInventory().addItem(purchasedStack);
         if (shopItem.shouldBroadcast()) {
             String itemName = shopItem.getItem() != null ? shopItem.getItem().getName()

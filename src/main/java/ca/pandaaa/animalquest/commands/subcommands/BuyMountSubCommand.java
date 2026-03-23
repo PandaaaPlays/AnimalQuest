@@ -94,6 +94,8 @@ public class BuyMountSubCommand implements SubCommand {
 
             data.setBalance(data.getBalance() - price);
 
+            data.getStatistics().logPurchase("MOUNT_" + mountType.name());
+
             if (mountType.isInWater()) {
                 data.getMounts().setWaterMount(mountType);
             } else {

@@ -33,6 +33,9 @@ public class HomeManager {
         long timeSinceCast = System.currentTimeMillis() - playerCooldown;
         long cooldownMillis = 5 * 60 * 1000L; // 5 Minutes
 
+        if (player.hasPermission("animalquest.admin"))
+            cooldownMillis = 5 * 1000L; // 5 Seconds
+
         if (timeSinceCast >= cooldownMillis)
             return 0;
 
